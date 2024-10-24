@@ -1,76 +1,80 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  username String   @unique
-  email    String   @unique @db.VarChar(100)
-  password Int
-  status   Boolean
-  expenses Expense[]
-  categories ExpenseCategory[]
-  payments Payment[]
-  methods  PaymentMethod[]
+    id         Int               @id @default(autoincrement())
+    username   String            @unique
+    email      String            @unique @db.VarChar(100)
+    password   String  
+    status     Boolean
+    expenses   Expense[]
+    categories ExpenseCategory[]
+    payments   Payment[]
+    methods    PaymentMethod[]
 }
 
 model ExpenseCategory {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(50)
-  status Boolean
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
-  expenses Expense[]
+    id       Int       @id @default(autoincrement())
+    name     String    @db.VarChar(50)
+    status   Boolean
+    user     User      @relation(fields: [userId], references: [id])
+    userId   Int
+    expenses Expense[]
 }
 
 model PaymentMethod {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(50)
-  status Boolean
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
-  payments Payment[]
+    id       Int       @id @default(autoincrement())
+    name     String    @db.VarChar(50)
+    status   Boolean
+    user     User      @relation(fields: [userId], references: [id])
+    userId   Int
+    payments Payment[]
 }
 
 model Expense {
-  id               Int     @id @default(autoincrement())
-  title            String  @db.VarChar(50)
-  amount           Decimal @db.Decimal(15, 2)
-  frequency        String  @db.VarChar(50)
-  dateCreate       DateTime
-  startDate        DateTime
-  endDate          DateTime
-  user             User    @relation(fields: [userId], references: [id])
-  userId           Int
-  category         ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
-  expenseCategoryId Int
-  plannings        Planning[]
-  payments         Payment[]
+    id                Int             @id @default(autoincrement())
+    title             String          @db.VarChar(50)
+    amount            Decimal         @db.Decimal(15, 2)
+    frequency         String          @db.VarChar(50)
+    dateCreate        DateTime
+    startDate         DateTime
+    endDate           DateTime
+    user              User            @relation(fields: [userId], references: [id])
+    userId            Int
+    category          ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
+    expenseCategoryId Int
+    plannings         Planning[]
+    payments          Payment[]
 }
 
 model Planning {
-  id         Int     @id @default(autoincrement())
-  name       String  @db.VarChar(50)
-  startDate  DateTime
-  endDate    DateTime
-  amount     Decimal @db.Decimal(15, 2)
-  expense    Expense @relation(fields: [expenseId], references: [id])
-  expenseId  Int
-  payments   Payment[]
+    id        Int       @id @default(autoincrement())
+    name      String    @db.VarChar(50)
+    startDate DateTime
+    endDate   DateTime
+    amount    Decimal   @db.Decimal(15, 2)
+    expense   Expense   @relation(fields: [expenseId], references: [id])
+    expenseId Int
+    payments  Payment[]
 }
 
 model Payment {
-  id              Int     @id @default(autoincrement())
-  amount          Decimal @db.Decimal(15, 2)
-  paymentDate     DateTime
-  reference       String  @db.VarChar(50)
-  user            User    @relation(fields: [userId], references: [id])
-  userId          Int
-  planning        Planning @relation(fields: [planningId], references: [id])
-  planningId      Int
-  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
-  paymentMethodId Int
-  expense         Expense @relation(fields: [expenseId], references: [id])
-  expenseId       Int
+    id              Int           @id @default(autoincrement())
+    amount          Decimal       @db.Decimal(15, 2)
+    paymentDate     DateTime
+    reference       String        @db.VarChar(50)
+    user            User          @relation(fields: [userId], references: [id])
+    userId          Int
+    planning        Planning      @relation(fields: [planningId], references: [id])
+    planningId      Int
+    paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+    paymentMethodId Int
+    expense         Expense       @relation(fields: [expenseId], references: [id])
+    expenseId       Int
 }
