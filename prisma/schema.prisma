@@ -46,10 +46,10 @@ model Expense {
     dateCreate        DateTime
     startDate         DateTime
     endDate           DateTime
-    user              User            @relation(fields: [userId], references: [id])
-    userId            Int
-    category          ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
-    expenseCategoryId Int
+    user              User?            @relation(fields: [userId], references: [id])
+    userId            Int?
+    category          ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id])
+    expenseCategoryId Int?
     plannings         Planning[]
     payments          Payment[]
 }
