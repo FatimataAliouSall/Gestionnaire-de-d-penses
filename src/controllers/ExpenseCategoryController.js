@@ -77,20 +77,30 @@ const ExpenseCategoryController = {
     try {
       const { id } = req.params;
       const { name, status } = req.body;
+      const parsedId = parseInt(id, 10);
+  
+      const categoryExists = await prisma.expenseCategory.findUnique({
+        where: { id: parsedId },
+      });
+      if (!categoryExists) {
+        return res.status(404).json({ message: "Catégorie de dépense introuvable" });
+      }
+  
       const updatedCategory = await prisma.expenseCategory.update({
-        where: { id: parseInt(id, 10) },
+        where: { id: parsedId },
         data: {
           name,
           status,
         },
       });
-
+  
       return res.status(200).json({ message: 'Catégorie mise à jour avec succès', updatedCategory });
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la catégorie :', error);
       return res.status(500).json({ error: 'Erreur lors de la mise à jour de la catégorie', details: error.message });
     }
-  },
+  }
+  ,
   async deleteExpenseCategory(req, res) {
     try {
       const { id } = req.params;
