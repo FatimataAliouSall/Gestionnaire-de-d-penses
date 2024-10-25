@@ -1,24 +1,20 @@
 import express from 'express';
-import userRouter from './src/routes/User.js';
 import bodyParser from 'body-parser';
 
+import userRouter from './src/routes/User.js';
+import expenseCategoryRouter from './src/routes/ExpenseCategory.js'; 
+import paymentMethodRouter from './src/routes/PaymentMethod.js'; 
+
 const app = express();
-
-// Middleware pour parser le corps des requêtes en JSON
 app.use(bodyParser.json());
-
-// Utiliser le routeur défini dans router.js
 app.use('/api', userRouter);
-
+app.use('/api', expenseCategoryRouter);
+app.use('/api', paymentMethodRouter); 
 // Route de test pour vérifier que l'application fonctionne
 app.get('/', (req, res) => {
-  res.send('Bienvenue dans l\'API des utilisateurs');
+  res.send("Bienvenue dans l'API des utilisateurs, des catégories de dépenses et des méthodes de paiement");
 });
-
-// Définir le port
 const PORT = process.env.PORT || 3000;
-
-// Démarrer le serveur
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
