@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-describe("ExpenseCategory Model Tests", () => {
+describe('ExpenseCategory Model Tests', () => {
   let categoryId = null;
 
   beforeAll(() => {
-    spyOn(prisma.expenseCategory, "create").and.callFake(async data => {
+    spyOn(prisma.expenseCategory, 'create').and.callFake(async (data) => {
       return {
         id: 1,
         name: data.data.name,
@@ -14,7 +14,7 @@ describe("ExpenseCategory Model Tests", () => {
         userId: data.data.userId,
       };
     });
-    spyOn(prisma.expenseCategory, "update").and.callFake(async data => {
+    spyOn(prisma.expenseCategory, 'update').and.callFake(async (data) => {
       if (data.where.id === 1) {
         return {
           id: 1,
@@ -23,26 +23,26 @@ describe("ExpenseCategory Model Tests", () => {
           userId: data.data.userId,
         };
       } else {
-        throw new Error("ExpenseCategory not found");
+        throw new Error('ExpenseCategory not found');
       }
     });
 
-    spyOn(prisma.expenseCategory, "findMany").and.callFake(async () => {
+    spyOn(prisma.expenseCategory, 'findMany').and.callFake(async () => {
       return [
         {
           id: 1,
-          name: "Office Supplies",
+          name: 'Office Supplies',
           status: true,
           userId: 1,
         },
       ];
     });
 
-    spyOn(prisma.expenseCategory, "delete").and.callFake(async data => {
+    spyOn(prisma.expenseCategory, 'delete').and.callFake(async (data) => {
       if (data.where.id === 1) {
         return { id: 1 };
       } else {
-        throw new Error("ExpenseCategory not found");
+        throw new Error('ExpenseCategory not found');
       }
     });
   });
@@ -51,9 +51,9 @@ describe("ExpenseCategory Model Tests", () => {
     await prisma.$disconnect();
   });
 
-  it("can be created", async () => {
+  it('can be created', async () => {
     const category = {
-      name: "Office Supplies",
+      name: 'Office Supplies',
       status: true,
       userId: 1,
     };
@@ -69,9 +69,9 @@ describe("ExpenseCategory Model Tests", () => {
     expect(result.userId).toBe(category.userId);
   });
 
-  it("can be updated", async () => {
+  it('can be updated', async () => {
     const updatedCategory = {
-      name: "Travel Expenses",
+      name: 'Travel Expenses',
       status: false,
       userId: 1,
     };
@@ -86,10 +86,10 @@ describe("ExpenseCategory Model Tests", () => {
     expect(result.userId).toBe(updatedCategory.userId);
   });
 
-  it("fails to update an expense category that does not exist", async () => {
+  it('fails to update an expense category that does not exist', async () => {
     const invalidId = 999999;
     const updatedCategory = {
-      name: "Invalid Category",
+      name: 'Invalid Category',
       status: false,
       userId: 1,
     };
@@ -104,14 +104,14 @@ describe("ExpenseCategory Model Tests", () => {
     }
   });
 
-  it("can get all expense categories", async () => {
+  it('can get all expense categories', async () => {
     const allCategories = await prisma.expenseCategory.findMany();
 
     expect(allCategories).not.toBeNull();
     expect(allCategories.length).toBeGreaterThan(0);
   });
 
-  it("can be deleted", async () => {
+  it('can be deleted', async () => {
     const result = await prisma.expenseCategory.delete({
       where: { id: categoryId },
     });
@@ -119,7 +119,7 @@ describe("ExpenseCategory Model Tests", () => {
     expect(result.id).toEqual(categoryId);
   });
 
-  it("fails to delete an expense category that does not exist", async () => {
+  it('fails to delete an expense category that does not exist', async () => {
     const invalidId = 999999;
 
     try {

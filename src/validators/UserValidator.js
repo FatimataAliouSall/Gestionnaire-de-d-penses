@@ -19,7 +19,9 @@ const createUserValidator = [
     .notEmpty()
     .withMessage('Le nom d\'utilisateur est obligatoire.')
     .isLength({ min: 3, max: 30 })
-    .withMessage('Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'),
+    .withMessage(
+      'Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'
+    ),
   check('email')
     .isEmail()
     .withMessage('Veuillez fournir une adresse email valide.')
@@ -52,7 +54,9 @@ const updateUserValidator = [
     .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (value) => {
-      const user = await prisma.user.findUnique({ where: { id: parseInt(value) } });
+      const user = await prisma.user.findUnique({
+        where: { id: parseInt(value) },
+      });
       if (!user) {
         throw new Error('L\'utilisateur n\'existe pas.');
       }
@@ -61,7 +65,9 @@ const updateUserValidator = [
   check('username')
     .optional()
     .isLength({ min: 3, max: 30 })
-    .withMessage('Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'),
+    .withMessage(
+      'Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'
+    ),
   check('email')
     .optional()
     .isEmail()
@@ -86,7 +92,9 @@ const deleteUserValidator = [
     .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (value) => {
-      const user = await prisma.user.findUnique({ where: { id: parseInt(value) } });
+      const user = await prisma.user.findUnique({
+        where: { id: parseInt(value) },
+      });
       if (!user) {
         throw new Error('L\'utilisateur n\'existe pas.');
       }
@@ -95,8 +103,4 @@ const deleteUserValidator = [
   handleValidationErrors,
 ];
 
-export {
-  createUserValidator,
-  updateUserValidator,
-  deleteUserValidator,
-};
+export { createUserValidator, updateUserValidator, deleteUserValidator };

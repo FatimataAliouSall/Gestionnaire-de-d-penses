@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-describe("User Model Tests", () => {
+describe('User Model Tests', () => {
   let userId = null;
 
   beforeAll(() => {
-    spyOn(prisma.user, "create").and.callFake(async data => {
+    spyOn(prisma.user, 'create').and.callFake(async (data) => {
       return {
         id: 1,
         username: data.data.username,
@@ -16,7 +16,7 @@ describe("User Model Tests", () => {
       };
     });
 
-    spyOn(prisma.user, "update").and.callFake(async data => {
+    spyOn(prisma.user, 'update').and.callFake(async (data) => {
       if (data.where.id === 1) {
         return {
           id: 1,
@@ -26,26 +26,26 @@ describe("User Model Tests", () => {
           status: data.data.status,
         };
       } else {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
     });
 
-    spyOn(prisma.user, "findMany").and.callFake(async () => {
+    spyOn(prisma.user, 'findMany').and.callFake(async () => {
       return [
         {
           id: 1,
-          username: "johndoe",
-          email: "johndoe@example.com",
-          password: "1234",
+          username: 'johndoe',
+          email: 'johndoe@example.com',
+          password: '1234',
           status: true,
         },
       ];
     });
-    spyOn(prisma.user, "delete").and.callFake(async data => {
+    spyOn(prisma.user, 'delete').and.callFake(async (data) => {
       if (data.where.id === 1) {
         return { id: 1 };
       } else {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
     });
   });
@@ -54,11 +54,11 @@ describe("User Model Tests", () => {
     await prisma.$disconnect();
   });
 
-  it("can be created", async () => {
+  it('can be created', async () => {
     const user = {
-      username: "johndoe",
-      email: "johndoe@example.com",
-      password: "1234",
+      username: 'johndoe',
+      email: 'johndoe@example.com',
+      password: '1234',
       status: true,
     };
 
@@ -74,11 +74,11 @@ describe("User Model Tests", () => {
     expect(result.status).toBe(user.status);
   });
 
-  it("can be updated", async () => {
+  it('can be updated', async () => {
     const updatedUser = {
-      username: "john_updated",
-      email: "john_updated@example.com",
-      password: "updated_password",
+      username: 'john_updated',
+      email: 'john_updated@example.com',
+      password: 'updated_password',
       status: false,
     };
 
@@ -93,12 +93,12 @@ describe("User Model Tests", () => {
     expect(result.status).toBe(updatedUser.status);
   });
 
-  it("fails to update a user that does not exist", async () => {
+  it('fails to update a user that does not exist', async () => {
     const invalidId = 999999;
     const updatedUser = {
-      username: "nonexistent_user",
-      email: "nonexistent@example.com",
-      password: "password",
+      username: 'nonexistent_user',
+      email: 'nonexistent@example.com',
+      password: 'password',
       status: false,
     };
 
@@ -112,14 +112,14 @@ describe("User Model Tests", () => {
     }
   });
 
-  it("can get all users", async () => {
+  it('can get all users', async () => {
     const allUsers = await prisma.user.findMany();
 
     expect(allUsers).not.toBeNull();
     expect(allUsers.length).toBeGreaterThan(0);
   });
 
-  it("can be deleted", async () => {
+  it('can be deleted', async () => {
     const result = await prisma.user.delete({
       where: { id: userId },
     });
@@ -127,7 +127,7 @@ describe("User Model Tests", () => {
     expect(result.id).toEqual(userId);
   });
 
-  it("fails to delete a user that does not exist", async () => {
+  it('fails to delete a user that does not exist', async () => {
     const invalidId = 999999;
 
     try {

@@ -23,15 +23,19 @@ const UserController = {
         data: {
           username,
           email,
-          password: hashedPassword, 
+          password: hashedPassword,
           status,
         },
       });
 
-      return res.status(201).json({ message: 'Utilisateur créé avec succès', newUser });
+      return res
+        .status(201)
+        .json({ message: 'Utilisateur créé avec succès', newUser });
     } catch (error) {
       console.error('Erreur lors de la création de l\'utilisateur :', error);
-      return res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur' });
+      return res
+        .status(500)
+        .json({ error: 'Erreur lors de la création de l\'utilisateur' });
     }
   },
 
@@ -50,7 +54,9 @@ const UserController = {
       return res.status(200).json(user);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'utilisateur :', error);
-      return res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
+      return res
+        .status(500)
+        .json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
     }
   },
 
@@ -61,7 +67,9 @@ const UserController = {
       return res.status(200).json(users);
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs :', error);
-      return res.status(500).json({ error: 'Erreur lors de la récupération des utilisateurs' });
+      return res
+        .status(500)
+        .json({ error: 'Erreur lors de la récupération des utilisateurs' });
     }
   },
 
@@ -88,10 +96,14 @@ const UserController = {
         },
       });
 
-      return res.status(200).json({ message: 'Utilisateur mis à jour avec succès', updatedUser });
+      return res
+        .status(200)
+        .json({ message: 'Utilisateur mis à jour avec succès', updatedUser });
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
-      return res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'utilisateur' });
+      return res
+        .status(500)
+        .json({ error: 'Erreur lors de la mise à jour de l\'utilisateur' });
     }
   },
 
@@ -104,10 +116,14 @@ const UserController = {
         where: { id: parseInt(id) },
       });
 
-      return res.status(200).json({ message: 'Utilisateur supprimé avec succès', deletedUser });
+      return res
+        .status(200)
+        .json({ message: 'Utilisateur supprimé avec succès', deletedUser });
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'utilisateur :', error);
-      return res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
+      return res
+        .status(500)
+        .json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
     }
   },
 };

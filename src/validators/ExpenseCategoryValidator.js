@@ -34,15 +34,17 @@ const createExpenseCategoryValidator = [
     .withMessage('Le statut doit être "true" ou "false".'),
   check('userId')
     .notEmpty()
-    .withMessage("L'ID de l'utilisateur est obligatoire.")
+    .withMessage('L\'ID de l\'utilisateur est obligatoire.')
     .bail()
     .isInt()
-    .withMessage("L'ID de l'utilisateur doit être un nombre entier.")
+    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
     .bail()
     .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({ where: { id: parseInt(userId, 10) } });
+      const userExists = await prisma.user.findUnique({
+        where: { id: parseInt(userId, 10) },
+      });
       if (!userExists) {
-        throw new Error("L'utilisateur spécifié n'existe pas.");
+        throw new Error('L\'utilisateur spécifié n\'existe pas.');
       }
     }),
   handleValidationErrors,
@@ -50,10 +52,10 @@ const createExpenseCategoryValidator = [
 const updateExpenseCategoryValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID de la catégorie est requis.")
+    .withMessage('L\'ID de la catégorie est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const categoryExists = await prisma.expenseCategory.findUnique({
@@ -71,7 +73,11 @@ const updateExpenseCategoryValidator = [
     .custom(async (name, { req }) => {
       const { id, userId } = req.params;
       const existingCategory = await prisma.expenseCategory.findFirst({
-        where: { name, userId: parseInt(userId, 10), id: { not: parseInt(id, 10) } },
+        where: {
+          name,
+          userId: parseInt(userId, 10),
+          id: { not: parseInt(id, 10) },
+        },
       });
       if (existingCategory) {
         throw new Error('Une autre catégorie avec ce nom existe déjà.');
@@ -86,10 +92,10 @@ const updateExpenseCategoryValidator = [
 const deleteExpenseCategoryValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID de la catégorie est requis.")
+    .withMessage('L\'ID de la catégorie est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const categoryExists = await prisma.expenseCategory.findUnique({

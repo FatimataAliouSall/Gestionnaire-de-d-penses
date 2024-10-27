@@ -24,42 +24,48 @@ const createExpenseValidator = [
     .withMessage('Le titre doit comporter au moins 3 caractères.'),
   check('amount')
     .notEmpty()
-    .withMessage("Le montant est obligatoire.")
+    .withMessage('Le montant est obligatoire.')
     .bail()
     .isFloat({ min: 0 })
-    .withMessage("Le montant doit être un nombre positif."),
+    .withMessage('Le montant doit être un nombre positif.'),
   check('frequency')
     .optional()
     .isIn(['mensuel', 'annuel', 'hebdomadaire'])
-    .withMessage("La fréquence doit être 'mensuel', 'annuel' ou 'hebdomadaire'."),
+    .withMessage(
+      'La fréquence doit être \'mensuel\', \'annuel\' ou \'hebdomadaire\'.'
+    ),
   check('startDate')
     .optional()
     .isISO8601()
-    .withMessage("La date de début doit être une date valide (format ISO)."),
+    .withMessage('La date de début doit être une date valide (format ISO).'),
   check('endDate')
     .optional()
     .isISO8601()
-    .withMessage("La date de fin doit être une date valide (format ISO)."),
+    .withMessage('La date de fin doit être une date valide (format ISO).'),
   check('userId')
     .optional()
     .isInt()
-    .withMessage("L'ID de l'utilisateur doit être un nombre entier.")
+    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
     .bail()
     .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({ where: { id: parseInt(userId, 10) } });
+      const userExists = await prisma.user.findUnique({
+        where: { id: parseInt(userId, 10) },
+      });
       if (!userExists) {
-        throw new Error("L'utilisateur spécifié n'existe pas.");
+        throw new Error('L\'utilisateur spécifié n\'existe pas.');
       }
     }),
   check('expenseCategoryId')
     .optional()
     .isInt()
-    .withMessage("L'ID de la catégorie de dépense doit être un nombre entier.")
+    .withMessage('L\'ID de la catégorie de dépense doit être un nombre entier.')
     .bail()
     .custom(async (expenseCategoryId) => {
-      const categoryExists = await prisma.expenseCategory.findUnique({ where: { id: parseInt(expenseCategoryId, 10) } });
+      const categoryExists = await prisma.expenseCategory.findUnique({
+        where: { id: parseInt(expenseCategoryId, 10) },
+      });
       if (!categoryExists) {
-        throw new Error("La catégorie de dépense spécifiée n'existe pas.");
+        throw new Error('La catégorie de dépense spécifiée n\'existe pas.');
       }
     }),
   handleValidationErrors,
@@ -69,10 +75,10 @@ const createExpenseValidator = [
 const updateExpenseValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID de la dépense est requis.")
+    .withMessage('L\'ID de la dépense est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const expenseExists = await prisma.expense.findUnique({
@@ -89,39 +95,45 @@ const updateExpenseValidator = [
   check('amount')
     .optional()
     .isFloat({ min: 0 })
-    .withMessage("Le montant doit être un nombre positif."),
+    .withMessage('Le montant doit être un nombre positif.'),
   check('frequency')
     .optional()
     .isIn(['mensuel', 'annuel', 'hebdomadaire'])
-    .withMessage("La fréquence doit être 'Mensuel', 'Annuel' ou 'Hebdomadaire'."),
+    .withMessage(
+      'La fréquence doit être \'Mensuel\', \'Annuel\' ou \'Hebdomadaire\'.'
+    ),
   check('startDate')
     .optional()
     .isISO8601()
-    .withMessage("La date de début doit être une date valide (format ISO)."),
+    .withMessage('La date de début doit être une date valide (format ISO).'),
   check('endDate')
     .optional()
     .isISO8601()
-    .withMessage("La date de fin doit être une date valide (format ISO)."),
+    .withMessage('La date de fin doit être une date valide (format ISO).'),
   check('userId')
     .optional()
     .isInt()
-    .withMessage("L'ID de l'utilisateur doit être un nombre entier.")
+    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
     .bail()
     .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({ where: { id: parseInt(userId, 10) } });
+      const userExists = await prisma.user.findUnique({
+        where: { id: parseInt(userId, 10) },
+      });
       if (!userExists) {
-        throw new Error("L'utilisateur spécifié n'existe pas.");
+        throw new Error('L\'utilisateur spécifié n\'existe pas.');
       }
     }),
   check('expenseCategoryId')
     .optional()
     .isInt()
-    .withMessage("L'ID de la catégorie de dépense doit être un nombre entier.")
+    .withMessage('L\'ID de la catégorie de dépense doit être un nombre entier.')
     .bail()
     .custom(async (expenseCategoryId) => {
-      const categoryExists = await prisma.expenseCategory.findUnique({ where: { id: parseInt(expenseCategoryId, 10) } });
+      const categoryExists = await prisma.expenseCategory.findUnique({
+        where: { id: parseInt(expenseCategoryId, 10) },
+      });
       if (!categoryExists) {
-        throw new Error("La catégorie de dépense spécifiée n'existe pas.");
+        throw new Error('La catégorie de dépense spécifiée n\'existe pas.');
       }
     }),
   handleValidationErrors,
@@ -131,10 +143,10 @@ const updateExpenseValidator = [
 const deleteExpenseValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID de la dépense est requis.")
+    .withMessage('L\'ID de la dépense est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const expenseExists = await prisma.expense.findUnique({

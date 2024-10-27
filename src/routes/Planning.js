@@ -4,13 +4,13 @@ import {
   createPlanningValidator,
   updatePlanningValidator,
   deletePlanningValidator,
-} from '../validators/PlanningValidator.js'; 
+} from '../validators/PlanningValidator.js';
 
 const router = express.Router();
 
 router.post(
   '/planning',
-  createPlanningValidator, 
+  createPlanningValidator,
   PlanningController.createPlanning
 );
 
@@ -18,19 +18,19 @@ router.get('/planning', PlanningController.getAllPlannings);
 
 router.get(
   '/planning/:id',
-  deletePlanningValidator, 
+  deletePlanningValidator,
   PlanningController.getPlanningById
 );
 
 router.put(
   '/planning/:id',
-  updatePlanningValidator, 
+  updatePlanningValidator,
   PlanningController.updatePlanning
 );
 
 router.delete(
   '/planning/:id',
-  deletePlanningValidator, 
+  deletePlanningValidator,
   PlanningController.deletePlanning
 );
 

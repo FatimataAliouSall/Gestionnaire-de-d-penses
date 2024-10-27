@@ -37,10 +37,10 @@ const createPaymentMethodValidator = [
     .withMessage('Le statut doit être "true" ou "false".'),
   check('userId')
     .notEmpty()
-    .withMessage("L'ID de l'utilisateur est obligatoire.")
+    .withMessage('L\'ID de l\'utilisateur est obligatoire.')
     .bail()
     .isInt()
-    .withMessage("L'ID de l'utilisateur doit être un nombre entier.")
+    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
     .bail()
     .custom(async (userId) => {
       const parsedUserId = parseInt(userId, 10);
@@ -48,7 +48,7 @@ const createPaymentMethodValidator = [
         where: { id: parsedUserId },
       });
       if (!userExists) {
-        throw new Error("L'utilisateur spécifié n'existe pas.");
+        throw new Error('L\'utilisateur spécifié n\'existe pas.');
       }
     }),
   handleValidationErrors,
@@ -56,10 +56,10 @@ const createPaymentMethodValidator = [
 const updatePaymentMethodValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID du mode de paiement est requis.")
+    .withMessage('L\'ID du mode de paiement est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const parsedId = parseInt(id, 10);
@@ -94,10 +94,10 @@ const updatePaymentMethodValidator = [
 const deletePaymentMethodValidator = [
   param('id')
     .notEmpty()
-    .withMessage("L'ID du mode de paiement est requis.")
+    .withMessage('L\'ID du mode de paiement est requis.')
     .bail()
     .isInt()
-    .withMessage("L'ID doit être un nombre entier.")
+    .withMessage('L\'ID doit être un nombre entier.')
     .bail()
     .custom(async (id) => {
       const parsedId = parseInt(id, 10);
