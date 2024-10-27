@@ -6,7 +6,6 @@ describe("User Model Tests", () => {
   let userId = null;
 
   beforeAll(() => {
-    // Simule la méthode `create`
     spyOn(prisma.user, "create").and.callFake(async data => {
       return {
         id: 1,
@@ -17,7 +16,6 @@ describe("User Model Tests", () => {
       };
     });
 
-    // Simule la méthode `update`
     spyOn(prisma.user, "update").and.callFake(async data => {
       if (data.where.id === 1) {
         return {
@@ -32,7 +30,6 @@ describe("User Model Tests", () => {
       }
     });
 
-    // Simule la méthode `findMany`
     spyOn(prisma.user, "findMany").and.callFake(async () => {
       return [
         {
@@ -44,8 +41,6 @@ describe("User Model Tests", () => {
         },
       ];
     });
-
-    // Simule la méthode `delete`
     spyOn(prisma.user, "delete").and.callFake(async data => {
       if (data.where.id === 1) {
         return { id: 1 };

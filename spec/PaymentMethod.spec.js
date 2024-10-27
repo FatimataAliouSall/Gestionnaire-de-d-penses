@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -43,7 +43,11 @@ describe("PaymentMethod Model Tests", () => {
       if (data.where.id === 1) {
         return { id: 1 };
       } else {
-        throw new Error("PaymentMethod not found");
+        throw new Prisma.PrismaClientKnownRequestError(
+          "Record to delete does not exist.",
+          "P2025", 
+          ""
+        );
       }
     });
   });
@@ -88,5 +92,13 @@ describe("PaymentMethod Model Tests", () => {
   it("can be deleted", async () => {
     const result = await prisma.paymentMethod.delete({ where: { id: methodId } });
     expect(result.id).toEqual(methodId);
+  });
+
+  it("fails to delete a payment method that does not exist", async () => {
+    const invalidId = 999999;
+
+    await expectAsync(
+      prisma.paymentMethod.delete({ where: { id: invalidId } })
+    ).toBeRejectedWithError(Prisma.PrismaClientKnownRequestError, /Record to delete does not exist/);
   });
 });

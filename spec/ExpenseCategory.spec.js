@@ -6,7 +6,6 @@ describe("ExpenseCategory Model Tests", () => {
   let categoryId = null;
 
   beforeAll(() => {
-    // Simule la méthode `create`
     spyOn(prisma.expenseCategory, "create").and.callFake(async data => {
       return {
         id: 1,
@@ -15,8 +14,6 @@ describe("ExpenseCategory Model Tests", () => {
         userId: data.data.userId,
       };
     });
-
-    // Simule la méthode `update`
     spyOn(prisma.expenseCategory, "update").and.callFake(async data => {
       if (data.where.id === 1) {
         return {
@@ -30,7 +27,6 @@ describe("ExpenseCategory Model Tests", () => {
       }
     });
 
-    // Simule la méthode `findMany`
     spyOn(prisma.expenseCategory, "findMany").and.callFake(async () => {
       return [
         {
@@ -42,7 +38,6 @@ describe("ExpenseCategory Model Tests", () => {
       ];
     });
 
-    // Simule la méthode `delete`
     spyOn(prisma.expenseCategory, "delete").and.callFake(async data => {
       if (data.where.id === 1) {
         return { id: 1 };
