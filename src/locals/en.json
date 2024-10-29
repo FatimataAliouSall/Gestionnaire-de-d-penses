@@ -1,0 +1,12 @@
+{
+  "userNotFound": "The specified user does not exist",
+  "categoryExists": "A category with this name already exists",
+  "categoryCreated": "Category created successfully",
+  "categoryFetchError": "Error fetching categories",
+  "categoryNotFound": "Category not found",
+  "categoryUpdateSuccess": "Category updated successfully",
+  "categoryUpdateError": "Error updating category",
+  "categoryDeleteSuccess": "Category deleted successfully",
+  "categoryDeleteError": "Error deleting category",
+  "invalidId": "Invalid category ID"
+}

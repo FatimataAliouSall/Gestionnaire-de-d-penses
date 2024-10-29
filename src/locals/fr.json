@@ -1,0 +1,12 @@
+{
+  "userNotFound": "L'utilisateur spécifié n'existe pas",
+  "categoryExists": "Une catégorie avec ce nom existe déjà",
+  "categoryCreated": "Catégorie créée avec succès",
+  "categoryFetchError": "Erreur lors de la récupération de la catégorie",
+  "categoryNotFound": "Catégorie non retrouvée",
+  "categoryUpdateSuccess": "Catégorie mise à jour avec succès",
+  "categoryUpdateError": "Erreur lors de la mise à jour de la catégorie",
+  "categoryDeleteSuccess": "Catégorie supprimée avec succès",
+  "categoryDeleteError": "Erreur lors de la suppression de la catégorie",
+  "invalidId": "ID invalide pour la catégorie de dépense"
+}
