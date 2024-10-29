@@ -14,26 +14,25 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Validator pour créer une dépense
 const createExpenseValidator = [
   check('title')
     .notEmpty()
     .withMessage('Le titre est obligatoire.')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('Le titre doit comporter au moins 3 caractères.'),
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le titre doit comporter entre 3 et 50 caractères.'),
   check('amount')
     .notEmpty()
     .withMessage('Le montant est obligatoire.')
     .bail()
-    .isFloat({ min: 0 })
-    .withMessage('Le montant doit être un nombre positif.'),
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage(
+      'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
+    ),
   check('frequency')
     .optional()
     .isIn(['mensuel', 'annuel', 'hebdomadaire'])
-    .withMessage(
-      'La fréquence doit être \'mensuel\', \'annuel\' ou \'hebdomadaire\'.'
-    ),
+    .withMessage('La fréquence doit être \'mensuel', 'annuel', 'hebdomadaire.'),
   check('startDate')
     .optional()
     .isISO8601()
@@ -71,7 +70,6 @@ const createExpenseValidator = [
   handleValidationErrors,
 ];
 
-// Validator pour mettre à jour une dépense
 const updateExpenseValidator = [
   param('id')
     .notEmpty()
@@ -90,8 +88,8 @@ const updateExpenseValidator = [
     }),
   check('title')
     .optional()
-    .isLength({ min: 3 })
-    .withMessage('Le titre doit comporter au moins 3 caractères.'),
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le titre doit comporter entre 3 et 50 caractères.'),
   check('amount')
     .optional()
     .isFloat({ min: 0 })
@@ -99,9 +97,7 @@ const updateExpenseValidator = [
   check('frequency')
     .optional()
     .isIn(['mensuel', 'annuel', 'hebdomadaire'])
-    .withMessage(
-      'La fréquence doit être \'Mensuel\', \'Annuel\' ou \'Hebdomadaire\'.'
-    ),
+    .withMessage('La fréquence doit être \'Mensuel', 'Annuel', 'Hebdomadaire.'),
   check('startDate')
     .optional()
     .isISO8601()
@@ -139,7 +135,6 @@ const updateExpenseValidator = [
   handleValidationErrors,
 ];
 
-// Validator pour supprimer une dépense
 const deleteExpenseValidator = [
   param('id')
     .notEmpty()

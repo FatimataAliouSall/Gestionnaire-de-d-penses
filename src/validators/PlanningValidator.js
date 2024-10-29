@@ -17,15 +17,15 @@ const createPlanningValidator = [
     .notEmpty()
     .withMessage('Le nom de la planification est obligatoire.')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.'),
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.'),
   check('startDate')
     .notEmpty()
     .withMessage('La date de début est obligatoire.')
     .bail()
     .isISO8601()
     .withMessage(
-      'La date de début doit être au format ISO8601 (ex. : \'YYYY-MM-DD\')'
+      'La date de début doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
     ),
   check('endDate')
     .notEmpty()
@@ -33,7 +33,7 @@ const createPlanningValidator = [
     .bail()
     .isISO8601()
     .withMessage(
-      'La date de fin doit être au format ISO8601 (ex. : \'YYYY-MM-DD\')'
+      'La date de fin doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
     )
     .bail()
     .custom((endDate, { req }) => {
@@ -49,11 +49,10 @@ const createPlanningValidator = [
     .notEmpty()
     .withMessage('Le montant est obligatoire.')
     .bail()
-    .isFloat({ min: 0 })
-    .withMessage('Le montant doit être un nombre positif.')
-    .bail()
-    .matches(/^\d+(\.\d{1,2})?$/)
-    .withMessage('Le montant doit avoir au maximum deux décimales.'),
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage(
+      'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
+    ),
   check('expenseId')
     .optional()
     .isInt()
@@ -70,7 +69,6 @@ const createPlanningValidator = [
   handleValidationErrors,
 ];
 
-// Validateur pour la mise à jour de planification
 const updatePlanningValidator = [
   param('id')
     .notEmpty()
@@ -89,19 +87,19 @@ const updatePlanningValidator = [
     }),
   check('name')
     .optional()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.'),
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.'),
   check('startDate')
     .optional()
     .isISO8601()
     .withMessage(
-      'La date de début doit être au format ISO8601 (ex. : \'YYYY-MM-DD\')'
+      'La date de début doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
     ),
   check('endDate')
     .optional()
     .isISO8601()
     .withMessage(
-      'La date de fin doit être au format ISO8601 (ex. : \'YYYY-MM-DD\')'
+      'La date de fin doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
     )
     .bail()
     .custom((endDate, { req }) => {
@@ -115,11 +113,10 @@ const updatePlanningValidator = [
     }),
   check('amount')
     .optional()
-    .isFloat({ min: 0 })
-    .withMessage('Le montant doit être un nombre positif.')
-    .bail()
-    .matches(/^\d+(\.\d{1,2})?$/)
-    .withMessage('Le montant doit avoir au maximum deux décimales.'),
+    .isDecimal({ decimal_digits: '0,2' })
+    .withMessage(
+      'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
+    ),
   check('expenseId')
     .optional()
     .isInt()
@@ -136,7 +133,6 @@ const updatePlanningValidator = [
   handleValidationErrors,
 ];
 
-// Validateur pour la suppression de planification
 const deletePlanningValidator = [
   param('id')
     .notEmpty()

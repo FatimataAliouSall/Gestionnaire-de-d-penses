@@ -18,8 +18,8 @@ const createPaymentMethodValidator = [
     .notEmpty()
     .withMessage('Le nom du mode de paiement est obligatoire.')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.')
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
     .custom(async (name, { req }) => {
       const { userId } = req.body;
@@ -72,8 +72,8 @@ const updatePaymentMethodValidator = [
     }),
   check('name')
     .optional()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.')
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
     .custom(async (name, { req }) => {
       const { id, userId } = req.params;

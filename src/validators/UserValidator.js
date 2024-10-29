@@ -18,9 +18,9 @@ const createUserValidator = [
   check('username')
     .notEmpty()
     .withMessage('Le nom d\'utilisateur est obligatoire.')
-    .isLength({ min: 3, max: 30 })
+    .isLength({ min: 3, max: 50 })
     .withMessage(
-      'Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'
+      'Le nom d\'utilisateur doit comporter entre 3 et 50 caractères.'
     ),
   check('email')
     .isEmail()
@@ -64,9 +64,9 @@ const updateUserValidator = [
     }),
   check('username')
     .optional()
-    .isLength({ min: 3, max: 30 })
+    .isLength({ min: 3, max: 50 })
     .withMessage(
-      'Le nom d\'utilisateur doit comporter entre 3 et 30 caractères.'
+      'Le nom d\'utilisateur doit comporter entre 3 et 50 caractères.'
     ),
   check('email')
     .optional()

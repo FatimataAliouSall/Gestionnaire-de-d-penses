@@ -17,8 +17,8 @@ const createExpenseCategoryValidator = [
     .notEmpty()
     .withMessage('Le nom de la catégorie est obligatoire.')
     .bail()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.')
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
     .custom(async (name, { req }) => {
       const existingCategory = await prisma.expenseCategory.findFirst({
@@ -32,21 +32,7 @@ const createExpenseCategoryValidator = [
     .optional()
     .isIn(['true', 'false'])
     .withMessage('Le statut doit être "true" ou "false".'),
-  check('userId')
-    .notEmpty()
-    .withMessage('L\'ID de l\'utilisateur est obligatoire.')
-    .bail()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({
-        where: { id: parseInt(userId, 10) },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
+
   handleValidationErrors,
 ];
 const updateExpenseCategoryValidator = [
@@ -67,8 +53,8 @@ const updateExpenseCategoryValidator = [
     }),
   check('name')
     .optional()
-    .isLength({ min: 3 })
-    .withMessage('Le nom doit comporter au moins 3 caractères.')
+    .isLength({ min: 3, max: 50 })
+    .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
     .custom(async (name, { req }) => {
       const { id, userId } = req.params;

@@ -14,7 +14,6 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Validator pour créer un paiement
 const createPaymentValidator = [
   check('amount')
     .notEmpty()
@@ -60,8 +59,6 @@ const createPaymentValidator = [
     }),
   handleValidationErrors,
 ];
-
-// Validator pour mettre à jour un paiement
 const updatePaymentValidator = [
   param('id')
     .notEmpty()
@@ -117,7 +114,6 @@ const updatePaymentValidator = [
   handleValidationErrors,
 ];
 
-// Validator pour supprimer un paiement
 const deletePaymentValidator = [
   param('id')
     .notEmpty()
