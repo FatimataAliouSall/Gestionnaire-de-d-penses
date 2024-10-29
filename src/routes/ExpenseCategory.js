@@ -5,31 +5,35 @@ import {
   updateExpenseCategoryValidator,
   deleteExpenseCategoryValidator,
 } from '../validators/ExpenseCategoryValidator.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// Routes pour les catégories de dépenses
 router.post(
   '/expense-categories',
+  authMiddleware,
   createExpenseCategoryValidator,
   ExpenseCategoryController.createExpenseCategory
 );
 router.get(
   '/expense-categories/:id',
+  authMiddleware,
   ExpenseCategoryController.getExpenseCategorieById
 );
 router.get(
   '/expense-categories',
+  authMiddleware,
   ExpenseCategoryController.getAllExpenseCategories
 );
-// router.get('/users/:userId/expense-categories', ExpenseCategoryController.getAllExpenseCategories);
 router.put(
   '/expense-categories/:id',
+  authMiddleware,
   updateExpenseCategoryValidator,
   ExpenseCategoryController.updateExpenseCategory
 );
 router.delete(
   '/expense-categories/:id',
+  authMiddleware,
   deleteExpenseCategoryValidator,
   ExpenseCategoryController.deleteExpenseCategory
 );

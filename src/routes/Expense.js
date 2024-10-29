@@ -5,22 +5,26 @@ import {
   updateExpenseValidator,
   deleteExpenseValidator,
 } from '../validators/ExpenseValidator.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 const router = express.Router();
 router.post(
   '/expenses',
+  authMiddleware,
   createExpenseValidator,
   ExpenseController.createExpense
 );
-router.get('/expenses', ExpenseController.getAllExpenses);
-router.get('/expenses/:id', ExpenseController.getExpenseById);
+router.get('/expenses', authMiddleware, ExpenseController.getAllExpenses);
+router.get('/expenses/:id', authMiddleware, ExpenseController.getExpenseById);
 router.put(
   '/expenses/:id',
+  authMiddleware,
   updateExpenseValidator,
   ExpenseController.updateExpense
 );
 router.delete(
   '/expenses/:id',
+  authMiddleware,
   deleteExpenseValidator,
   ExpenseController.deleteExpense
 );

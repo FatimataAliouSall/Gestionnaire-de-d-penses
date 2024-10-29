@@ -5,13 +5,28 @@ import {
   updateUserValidator,
   deleteUserValidator,
 } from '../validators/UserValidator.js';
-
+import { authMiddleware } from '../middlewares/auth.js';
 const router = express.Router();
 
-router.post('/users', createUserValidator, UserController.createUser); // Validation avant la création
-router.get('/users/:id', UserController.getUser); // Aucun validateur spécifique pour la lecture par ID
-router.get('/users', UserController.getAllUsers); // Aucun validateur spécifique pour la lecture de tous les utilisateurs
-router.put('/users/:id', updateUserValidator, UserController.updateUser); // Validation avant la mise à jour
-router.delete('/users/:id', deleteUserValidator, UserController.deleteUser); // Validation avant la suppression
+router.post(
+  '/users',
+  authMiddleware,
+  createUserValidator,
+  UserController.createUser
+);
+router.get('/users/:id', authMiddleware, UserController.getUser);
+router.get('/users', authMiddleware, UserController.getAllUsers);
+router.put(
+  '/users/:id',
+  authMiddleware,
+  updateUserValidator,
+  UserController.updateUser
+);
+router.delete(
+  '/users/:id',
+  authMiddleware,
+  deleteUserValidator,
+  UserController.deleteUser
+);
 
 export default router;

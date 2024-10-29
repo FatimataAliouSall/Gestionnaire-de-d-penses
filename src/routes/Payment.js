@@ -5,32 +5,30 @@ import {
   updatePaymentValidator,
   deletePaymentValidator,
 } from '../validators/PaymentValidator.js';
-
+import { authMiddleware } from '../middlewares/auth.js';
 const router = express.Router();
 
-// Route pour créer un paiement, avec validator
 router.post(
   '/payments',
+  authMiddleware,
   createPaymentValidator,
   PaymentController.createPayment
 );
 
-// Route pour obtenir tous les paiements
-router.get('/payments', PaymentController.getAllPayments);
+router.get('/payments', authMiddleware, PaymentController.getAllPayments);
 
-// Route pour obtenir un paiement par ID
-router.get('/payments/:id', PaymentController.getPaymentById);
+router.get('/payments/:id', authMiddleware, PaymentController.getPaymentById);
 
-// Route pour mettre à jour un paiement, avec validator
 router.put(
   '/payments/:id',
+  authMiddleware,
   updatePaymentValidator,
   PaymentController.updatePayment
 );
 
-// Route pour supprimer un paiement, avec validator
 router.delete(
   '/payments/:id',
+  authMiddleware,
   deletePaymentValidator,
   PaymentController.deletePayment
 );
