@@ -39,20 +39,16 @@ const PaymentMethodController = {
         },
       });
 
-      return res
-        .status(201)
-        .json({
-          message: 'Mode de paiement créé avec succès',
-          newPaymentMethod,
-        });
+      return res.status(201).json({
+        message: 'Mode de paiement créé avec succès',
+        newPaymentMethod,
+      });
     } catch (error) {
       console.error('Erreur lors de la création du mode de paiement :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la création du mode de paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la création du mode de paiement',
+        details: error.message,
+      });
     }
   },
 
@@ -70,12 +66,10 @@ const PaymentMethodController = {
         'Erreur lors de la récupération des modes de paiement :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          message: 'Erreur lors de la récupération des modes de paiement',
-          error,
-        });
+      return res.status(500).json({
+        message: 'Erreur lors de la récupération des modes de paiement',
+        error,
+      });
     }
   },
 
@@ -102,12 +96,10 @@ const PaymentMethodController = {
         'Erreur lors de la récupération du mode de paiement :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la récupération du mode de paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la récupération du mode de paiement',
+        details: error.message,
+      });
     }
   },
 
@@ -140,23 +132,19 @@ const PaymentMethodController = {
         },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: 'Mode de paiement mis à jour avec succès',
-          updatedPaymentMethod,
-        });
+      return res.status(200).json({
+        message: 'Mode de paiement mis à jour avec succès',
+        updatedPaymentMethod,
+      });
     } catch (error) {
       console.error(
         'Erreur lors de la mise à jour du mode de paiement :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la mise à jour du mode de paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la mise à jour du mode de paiement',
+        details: error.message,
+      });
     }
   },
 
@@ -183,23 +171,19 @@ const PaymentMethodController = {
         where: { id: parsedId },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: 'Mode de paiement supprimé avec succès',
-          deletedPaymentMethod,
-        });
+      return res.status(200).json({
+        message: 'Mode de paiement supprimé avec succès',
+        deletedPaymentMethod,
+      });
     } catch (error) {
       console.error(
         'Erreur lors de la suppression du mode de paiement :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la suppression du mode de paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la suppression du mode de paiement',
+        details: error.message,
+      });
     }
   },
 };

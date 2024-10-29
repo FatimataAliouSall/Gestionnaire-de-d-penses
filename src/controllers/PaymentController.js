@@ -7,7 +7,6 @@ function parseId(id) {
 }
 
 const PaymentController = {
-  // Créer un paiement
   async createPayment(req, res) {
     try {
       const {
@@ -23,8 +22,6 @@ const PaymentController = {
       const parsedPlanningId = parseId(planningId);
       const parsedPaymentMethodId = parseId(paymentMethodId);
       const parsedExpenseId = parseId(expenseId);
-
-      // Vérification des références (utilisateur, planning, méthode de paiement, dépense)
       const userExists = parsedUserId
         ? await prisma.user.findUnique({ where: { id: parsedUserId } })
         : null;
@@ -56,8 +53,6 @@ const PaymentController = {
         return res
           .status(400)
           .json({ message: 'La dépense spécifiée n\'existe pas' });
-
-      // Création du paiement
       const newPayment = await prisma.payment.create({
         data: {
           amount,
@@ -75,16 +70,12 @@ const PaymentController = {
         .json({ message: 'Paiement créé avec succès', newPayment });
     } catch (error) {
       console.error('Erreur lors de la création du paiement :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la création du paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la création du paiement',
+        details: error.message,
+      });
     }
   },
-
-  // Récupérer tous les paiements
   async getAllPayments(req, res) {
     try {
       const payments = await prisma.payment.findMany({
@@ -98,16 +89,12 @@ const PaymentController = {
       return res.status(200).json(payments);
     } catch (error) {
       console.error('Erreur lors de la récupération des paiements :', error);
-      return res
-        .status(500)
-        .json({
-          message: 'Erreur lors de la récupération des paiements',
-          error,
-        });
+      return res.status(500).json({
+        message: 'Erreur lors de la récupération des paiements',
+        error,
+      });
     }
   },
-
-  // Récupérer un paiement par ID
   async getPaymentById(req, res) {
     try {
       const { id } = req.params;
@@ -136,16 +123,13 @@ const PaymentController = {
       return res.status(200).json(payment);
     } catch (error) {
       console.error('Erreur lors de la récupération du paiement :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la récupération du paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la récupération du paiement',
+        details: error.message,
+      });
     }
   },
 
-  // Mettre à jour un paiement par ID
   async updatePayment(req, res) {
     try {
       const { id } = req.params;
@@ -166,7 +150,6 @@ const PaymentController = {
           .json({ message: 'ID invalide pour le paiement' });
       }
 
-      // Vérification des références
       const paymentExists = await prisma.payment.findUnique({
         where: { id: parsedId },
       });
@@ -207,7 +190,6 @@ const PaymentController = {
           .status(400)
           .json({ message: 'La dépense spécifiée n\'existe pas' });
 
-      // Mise à jour du paiement
       const updatedPayment = await prisma.payment.update({
         where: { id: parsedId },
         data: {
@@ -226,16 +208,13 @@ const PaymentController = {
         .json({ message: 'Paiement mis à jour avec succès', updatedPayment });
     } catch (error) {
       console.error('Erreur lors de la mise à jour du paiement :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la mise à jour du paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la mise à jour du paiement',
+        details: error.message,
+      });
     }
   },
 
-  // Supprimer un paiement par ID
   async deletePayment(req, res) {
     try {
       const { id } = req.params;
@@ -264,12 +243,10 @@ const PaymentController = {
         .json({ message: 'Paiement supprimé avec succès', deletedPayment });
     } catch (error) {
       console.error('Erreur lors de la suppression du paiement :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la suppression du paiement',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la suppression du paiement',
+        details: error.message,
+      });
     }
   },
 };

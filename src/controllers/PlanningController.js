@@ -36,12 +36,10 @@ const PlanningController = {
         .json({ message: 'Planification créée avec succès', newPlanning });
     } catch (error) {
       console.error('Erreur lors de la création de la planification :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la création de la planification',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la création de la planification',
+        details: error.message,
+      });
     }
   },
 
@@ -59,12 +57,10 @@ const PlanningController = {
         'Erreur lors de la récupération des planifications :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          message: 'Erreur lors de la récupération des planifications',
-          error,
-        });
+      return res.status(500).json({
+        message: 'Erreur lors de la récupération des planifications',
+        error,
+      });
     }
   },
 
@@ -92,12 +88,10 @@ const PlanningController = {
         'Erreur lors de la récupération de la planification :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la récupération de la planification',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la récupération de la planification',
+        details: error.message,
+      });
     }
   },
 
@@ -139,23 +133,19 @@ const PlanningController = {
         },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: 'Planification mise à jour avec succès',
-          updatedPlanning,
-        });
+      return res.status(200).json({
+        message: 'Planification mise à jour avec succès',
+        updatedPlanning,
+      });
     } catch (error) {
       console.error(
         'Erreur lors de la mise à jour de la planification :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la mise à jour de la planification',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la mise à jour de la planification',
+        details: error.message,
+      });
     }
   },
 
@@ -182,23 +172,19 @@ const PlanningController = {
         where: { id: parsedId },
       });
 
-      return res
-        .status(200)
-        .json({
-          message: 'Planification supprimée avec succès',
-          deletedPlanning,
-        });
+      return res.status(200).json({
+        message: 'Planification supprimée avec succès',
+        deletedPlanning,
+      });
     } catch (error) {
       console.error(
         'Erreur lors de la suppression de la planification :',
         error
       );
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la suppression de la planification',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la suppression de la planification',
+        details: error.message,
+      });
     }
   },
 };

@@ -19,8 +19,6 @@ const ExpenseController = {
         expenseCategoryId,
       } = req.body;
       const parsedUserId = parseId(userId);
-
-      // Vérification de l'existence de l'utilisateur
       if (parsedUserId) {
         const userExists = await prisma.user.findUnique({
           where: { id: parsedUserId },
@@ -32,21 +30,17 @@ const ExpenseController = {
         }
       }
 
-      // Vérification de l'existence de la catégorie de dépense
       if (expenseCategoryId) {
         const categoryExists = await prisma.expenseCategory.findUnique({
           where: { id: expenseCategoryId },
         });
         if (!categoryExists) {
-          return res
-            .status(400)
-            .json({
-              message: 'La catégorie de dépense spécifiée n\'existe pas',
-            });
+          return res.status(400).json({
+            message: 'La catégorie de dépense spécifiée n\'existe pas',
+          });
         }
       }
 
-      // Création de la dépense
       const newExpense = await prisma.expense.create({
         data: {
           title,
@@ -55,8 +49,8 @@ const ExpenseController = {
           dateCreate: new Date(),
           startDate: new Date(startDate),
           endDate: new Date(endDate),
-          userId: parsedUserId || null, // Définit à null si parsedUserId est invalide
-          expenseCategoryId: expenseCategoryId || null, // Définit à null si expenseCategoryId est invalide
+          userId: parsedUserId || null,
+          expenseCategoryId: expenseCategoryId || null,
         },
       });
 
@@ -65,12 +59,10 @@ const ExpenseController = {
         .json({ message: 'Dépense créée avec succès', newExpense });
     } catch (error) {
       console.error('Erreur lors de la création de la dépense :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la création de la dépense',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la création de la dépense',
+        details: error.message,
+      });
     }
   },
   async getAllExpenses(req, res) {
@@ -86,16 +78,12 @@ const ExpenseController = {
       return res.status(200).json(expenses);
     } catch (error) {
       console.error('Erreur lors de la récupération des dépenses :', error);
-      return res
-        .status(500)
-        .json({
-          message: 'Erreur lors de la récupération des dépenses',
-          error,
-        });
+      return res.status(500).json({
+        message: 'Erreur lors de la récupération des dépenses',
+        error,
+      });
     }
   },
-
-  // Récupérer une dépense par ID
   async getExpenseById(req, res) {
     try {
       const { id } = req.params;
@@ -114,16 +102,12 @@ const ExpenseController = {
       return res.status(200).json(expense);
     } catch (error) {
       console.error('Erreur lors de la récupération de la dépense :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la récupération de la dépense',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la récupération de la dépense',
+        details: error.message,
+      });
     }
   },
-
-  // Mettre à jour une dépense par ID
   async updateExpense(req, res) {
     try {
       const { id } = req.params;
@@ -141,16 +125,12 @@ const ExpenseController = {
       if (parsedId === null) {
         return res.status(400).json({ message: 'ID invalide pour la dépense' });
       }
-
-      // Vérification de l'existence de la dépense
       const expenseExists = await prisma.expense.findUnique({
         where: { id: parsedId },
       });
       if (!expenseExists) {
         return res.status(404).json({ message: 'Dépense introuvable' });
       }
-
-      // Vérification de l'existence de l'utilisateur
       if (userId) {
         const userExists = await prisma.user.findUnique({
           where: { id: parseId(userId) },
@@ -161,18 +141,14 @@ const ExpenseController = {
             .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
         }
       }
-
-      // Vérification de l'existence de la catégorie de dépense
       if (expenseCategoryId) {
         const categoryExists = await prisma.expenseCategory.findUnique({
           where: { id: expenseCategoryId },
         });
         if (!categoryExists) {
-          return res
-            .status(400)
-            .json({
-              message: 'La catégorie de dépense spécifiée n\'existe pas',
-            });
+          return res.status(400).json({
+            message: 'La catégorie de dépense spécifiée n\'existe pas',
+          });
         }
       }
 
@@ -185,8 +161,8 @@ const ExpenseController = {
           frequency,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
-          userId: parseId(userId) || null, // Définit à null si userId est invalide
-          expenseCategoryId: expenseCategoryId || null, // Définit à null si expenseCategoryId est invalide
+          userId: parseId(userId) || null,
+          expenseCategoryId: expenseCategoryId || null,
         },
       });
 
@@ -195,12 +171,10 @@ const ExpenseController = {
         .json({ message: 'Dépense mise à jour avec succès', updatedExpense });
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la dépense :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la mise à jour de la dépense',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la mise à jour de la dépense',
+        details: error.message,
+      });
     }
   },
 
@@ -230,12 +204,10 @@ const ExpenseController = {
         .json({ message: 'Dépense supprimée avec succès', deletedExpense });
     } catch (error) {
       console.error('Erreur lors de la suppression de la dépense :', error);
-      return res
-        .status(500)
-        .json({
-          error: 'Erreur lors de la suppression de la dépense',
-          details: error.message,
-        });
+      return res.status(500).json({
+        error: 'Erreur lors de la suppression de la dépense',
+        details: error.message,
+      });
     }
   },
 };

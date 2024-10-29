@@ -4,21 +4,17 @@ const prisma = new PrismaClient();
 const SALT_ROUNDS = 10;
 
 const UserController = {
-  // Créer un nouvel utilisateur
   async createUser(req, res) {
     try {
       const { username, email, password, status } = req.body;
 
-      // Vérifier si l'utilisateur existe déjà
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) {
         return res.status(400).json({ message: 'Cet email est déjà utilisé' });
       }
 
-      // Hacher le mot de passe avant de l'enregistrer
       const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-      // Créer l'utilisateur dans la base de données
       const newUser = await prisma.user.create({
         data: {
           username,
@@ -39,7 +35,6 @@ const UserController = {
     }
   },
 
-  // Lire un utilisateur par ID
   async getUser(req, res) {
     try {
       const { id } = req.params;
@@ -60,7 +55,6 @@ const UserController = {
     }
   },
 
-  // Lire tous les utilisateurs
   async getAllUsers(req, res) {
     try {
       const users = await prisma.user.findMany();
@@ -72,26 +66,21 @@ const UserController = {
         .json({ error: 'Erreur lors de la récupération des utilisateurs' });
     }
   },
-
-  // Mettre à jour un utilisateur
   async updateUser(req, res) {
     try {
       const { id } = req.params;
       const { username, email, password, status } = req.body;
 
-      // Hacher le mot de passe si un nouveau mot de passe est fourni
       let hashedPassword = undefined;
       if (password) {
         hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
       }
-
-      // Mettre à jour l'utilisateur dans la base de données
       const updatedUser = await prisma.user.update({
         where: { id: parseInt(id) },
         data: {
           username,
           email,
-          password: hashedPassword || undefined, // Ne pas changer le mot de passe si aucun nouveau n'est fourni
+          password: hashedPassword || undefined,
           status,
         },
       });
@@ -107,11 +96,9 @@ const UserController = {
     }
   },
 
-  // Supprimer un utilisateur
   async deleteUser(req, res) {
     try {
       const { id } = req.params;
-
       const deletedUser = await prisma.user.delete({
         where: { id: parseInt(id) },
       });
