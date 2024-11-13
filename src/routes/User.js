@@ -5,26 +5,36 @@ import {
   updateUserValidator,
   deleteUserValidator,
 } from '../validators/UserValidator.js';
-import { authMiddleware } from '../middlewares/auth.js';
+// import { authMiddleware } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.post(
   '/users',
-  authMiddleware,
+  // authMiddleware,
   createUserValidator,
   UserController.createUser
 );
-router.get('/users/:id', authMiddleware, UserController.getUser);
-router.get('/users', authMiddleware, UserController.getAllUsers);
+router.post(
+  '/login',
+  // authMiddleware,
+  createUserValidator,
+  UserController.login
+);
+router.get('/users/:id', 
+  // authMiddleware,
+   UserController.getUser);
+router.get('/users', 
+  // authMiddleware,
+   UserController.getAllUsers);
 router.put(
   '/users/:id',
-  authMiddleware,
+  // authMiddleware,
   updateUserValidator,
   UserController.updateUser
 );
 router.delete(
   '/users/:id',
-  authMiddleware,
+  // authMiddleware,
   deleteUserValidator,
   UserController.deleteUser
 );

@@ -31,8 +31,8 @@ const createExpenseValidator = [
     ),
   check('frequency')
     .optional()
-    .isIn(['mensuel', 'annuel', 'hebdomadaire'])
-    .withMessage('La fréquence doit être \'mensuel', 'annuel', 'hebdomadaire.'),
+    .isIn(['Mensuel', 'Annuel', 'Hebdomadaire'])
+    .withMessage('La fréquence doit être \'Mensuel', 'Annuel', 'Hebdomadaire.'),
   check('startDate')
     .optional()
     .isISO8601()
@@ -41,19 +41,19 @@ const createExpenseValidator = [
     .optional()
     .isISO8601()
     .withMessage('La date de fin doit être une date valide (format ISO).'),
-  check('userId')
-    .optional()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({
-        where: { id: parseInt(userId, 10) },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
+  // check('userId')
+  //   .optional()
+  //   .isInt()
+  //   .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
+  //   .bail()
+  //   .custom(async (userId) => {
+  //     const userExists = await prisma.user.findUnique({
+  //       where: { id: parseInt(userId, 10) },
+  //     });
+  //     if (!userExists) {
+  //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
+  //     }
+  //   }),
   check('expenseCategoryId')
     .optional()
     .isInt()
@@ -106,19 +106,19 @@ const updateExpenseValidator = [
     .optional()
     .isISO8601()
     .withMessage('La date de fin doit être une date valide (format ISO).'),
-  check('userId')
-    .optional()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({
-        where: { id: parseInt(userId, 10) },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
+  // check('userId')
+  //   .optional()
+  //   .isInt()
+  //   .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
+  //   .bail()
+  //   .custom(async (userId) => {
+  //     const userExists = await prisma.user.findUnique({
+  //       where: { id: parseInt(userId, 10) },
+  //     });
+  //     if (!userExists) {
+  //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
+  //     }
+  //   }),
   check('expenseCategoryId')
     .optional()
     .isInt()

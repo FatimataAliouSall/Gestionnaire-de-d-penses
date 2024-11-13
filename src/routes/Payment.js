@@ -5,30 +5,40 @@ import {
   updatePaymentValidator,
   deletePaymentValidator,
 } from '../validators/PaymentValidator.js';
-import { authMiddleware } from '../middlewares/auth.js';
+// import { authMiddleware } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.post(
   '/payments',
-  authMiddleware,
+  // authMiddleware,
   createPaymentValidator,
   PaymentController.createPayment
 );
 
-router.get('/payments', authMiddleware, PaymentController.getAllPayments);
+router.get('/payments-requirements', PaymentController.getRequirements);
 
-router.get('/payments/:id', authMiddleware, PaymentController.getPaymentById);
+router.get(
+  '/payments',
+  //  authMiddleware,
+  PaymentController.getAllPayments
+);
+
+router.get(
+  '/payments/:id',
+  // authMiddleware,
+  PaymentController.getPaymentById
+);
 
 router.put(
   '/payments/:id',
-  authMiddleware,
+  // authMiddleware,
   updatePaymentValidator,
   PaymentController.updatePayment
 );
 
 router.delete(
   '/payments/:id',
-  authMiddleware,
+  // authMiddleware,
   deletePaymentValidator,
   PaymentController.deletePayment
 );

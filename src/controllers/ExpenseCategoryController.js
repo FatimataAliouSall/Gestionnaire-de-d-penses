@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 function parseUserId(userId) {
-  const parsed = parseInt(userId, 10);
+  const parsed = parseInt(userId);
   return isNaN(parsed) ? null : parsed;
 }
 
@@ -17,14 +17,14 @@ const ExpenseCategoryController = {
           where: { id: parsedUserId },
         });
         if (!userExists) {
-          return res.status(400).json({ message: req.t('userNotFound') });
+          return res.status(400).json({ message: 'L\'utilisateur spécifié n\'existe pas' });
         }
       }
       const existingCategory = await prisma.expenseCategory.findFirst({
         where: { name, userId: parsedUserId },
       });
       if (existingCategory) {
-        return res.status(400).json({ message: req.t('categoryExists') });
+        return res.status(400).json({ message: 'cette catégory avec ce nom existe déjà'});
       }
 
       const newCategory = await prisma.expenseCategory.create({
@@ -33,26 +33,26 @@ const ExpenseCategoryController = {
 
       return res
         .status(201)
-        .json({ message: req.t('categoryCreated'), newCategory });
+        .json({ message:'Catégorie créé avec succès', newCategory });
     } catch (error) {
       console.error('Erreur lors de la création de la catégorie :', error);
       return res
         .status(500)
-        .json({ error: req.t('categoryFetchError'), details: error.message });
+        .json({ error: 'Erreur lors de la création de catégorie', details: error.message });
     }
   },
 
   async getAllExpenseCategories(req, res) {
     try {
-      const categories = await prisma.expenseCategory.findMany({
-        include: { user: true, expenses: true },
+      const category = await prisma.expenseCategory.findMany({
+        include: { user: { select : { username : true}}, expenses: { select : { title : true}} },
       });
-      return res.status(200).json(categories);
+      return res.status(200).json(category);
     } catch (error) {
       console.error(error);
       return res
         .status(500)
-        .json({ message: req.t('categoryFetchError'), error });
+        .json({ message: 'Erreur lors de la récupération des catégories', error });
     }
   },
 
@@ -60,31 +60,51 @@ const ExpenseCategoryController = {
     try {
       const { id } = req.params;
       const category = await prisma.expenseCategory.findUnique({
-        where: { id: parseUserId(id) },
+        where: { id: parseInt(id) }, 
+        include: {
+          user: {
+            select: {
+              username: true,
+            },
+          },
+          expenses: {
+            select: {
+              title: true,
+            },
+          },
+        },
       });
+  
       if (!category) {
-        return res.status(404).json({ message: req.t('categoryNotFound') });
+        return res.status(404).json({ message: 'Catégorie non trouvée' });
       }
+  
       return res.status(200).json(category);
     } catch (error) {
-      console.error(error);
+      console.error('Erreur lors de la récupération de la catégorie de dépense :', error);
       return res
         .status(500)
-        .json({ error: req.t('categoryFetchError'), details: error.message });
+        .json({ error: 'Erreur lors de la récupération de la catégorie', details: error.message });
     }
   },
+  
 
   async updateExpenseCategory(req, res) {
     try {
       const { id } = req.params;
       const { name, status } = req.body;
-      const parsedId = parseInt(id, 10);
+      const parsedId = parseUserId(id);
+      if (parsedId === null) {
+        return res
+          .status(400)
+          .json({ message: 'ID invalide pour la catégorie' });
+      }
 
       const categoryExists = await prisma.expenseCategory.findUnique({
         where: { id: parsedId },
       });
       if (!categoryExists) {
-        return res.status(404).json({ message: req.t('categoryNotFound') });
+        return res.status(404).json({ message:'Catégorie introuvable' });
       }
 
       const updatedCategory = await prisma.expenseCategory.update({
@@ -94,29 +114,29 @@ const ExpenseCategoryController = {
 
       return res
         .status(200)
-        .json({ message: req.t('categoryUpdateSuccess'), updatedCategory });
+        .json({ message: 'Catégorie mis à jour avec succès', updatedCategory });
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la catégorie :', error);
       return res
         .status(500)
-        .json({ error: req.t('categoryUpdateError'), details: error.message });
+        .json({ error: 'Erreur lors de la mise à jour de catégorie', details: error.message });
     }
   },
 
   async deleteExpenseCategory(req, res) {
     try {
       const { id } = req.params;
-      const parsedId = parseInt(id, 10);
+      const parsedId = parseUserId(id);
 
-      if (isNaN(parsedId)) {
-        return res.status(400).json({ message: req.t('invalidId') });
+      if (parsedId === null){
+        return res.status(400).json({ message: 'ID invalide pour la catégorie' });
       }
       const existingCategory = await prisma.expenseCategory.findUnique({
         where: { id: parsedId },
       });
 
       if (!existingCategory) {
-        return res.status(404).json({ message: req.t('categoryNotFound') });
+        return res.status(404).json({ message:  'Catégorie non trouvée' });
       }
 
       const deletedCategory = await prisma.expenseCategory.delete({
@@ -125,12 +145,12 @@ const ExpenseCategoryController = {
 
       return res
         .status(200)
-        .json({ message: req.t('categoryDeleteSuccess'), deletedCategory });
+        .json({ message: 'Catégorie supprimée avec succès', deletedCategory });
     } catch (error) {
       console.error('Erreur lors de la suppression de la catégorie :', error);
       return res
         .status(500)
-        .json({ error: req.t('categoryDeleteError'), details: error.message });
+        .json({ error: 'Erreur lors de la suppression de catégorie', details: error.message });
     }
   },
 };

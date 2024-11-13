@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 function parseId(id) {
-  const parsed = parseInt(id, 10);
+  const parsed = parseInt(id);
   return isNaN(parsed) ? null : parsed;
 }
 
@@ -15,30 +15,42 @@ const ExpenseController = {
         frequency,
         startDate,
         endDate,
-        userId,
+        // userId,
         expenseCategoryId,
       } = req.body;
-      const parsedUserId = parseId(userId);
-      if (parsedUserId) {
-        const userExists = await prisma.user.findUnique({
-          where: { id: parsedUserId },
+      // const parsedUserId = parseUserId(userId);
+      // if (parsedUserId) {
+      //   const userExists = await prisma.user.findUnique({
+      //     where: { id: parsedUserId },
+      //   });
+      //   if (!userExists) {
+      //     return res
+      //       .status(400)
+      //       .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
+      //   }
+      // }
+
+      if (!expenseCategoryId) {
+        return res.status(400).json({
+          message: 'L\'ID de la catégorie de dépense est requis',
         });
-        if (!userExists) {
-          return res
-            .status(400)
-            .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
-        }
       }
 
-      if (expenseCategoryId) {
-        const categoryExists = await prisma.expenseCategory.findUnique({
-          where: { id: expenseCategoryId },
+      const parsedExpenseCategoryId = parseId(expenseCategoryId);
+      if (parsedExpenseCategoryId === null) {
+        return res.status(400).json({
+          message: 'L\'ID de la catégorie de dépense est invalide',
         });
-        if (!categoryExists) {
-          return res.status(400).json({
-            message: 'La catégorie de dépense spécifiée n\'existe pas',
-          });
-        }
+      }
+
+      const categoryExists = await prisma.expenseCategory.findUnique({
+        where: { id: parsedExpenseCategoryId },
+      });
+
+      if (!categoryExists) {
+        return res.status(400).json({
+          message: 'La catégorie de dépense spécifiée n\'existe pas',
+        });
       }
 
       const newExpense = await prisma.expense.create({
@@ -49,8 +61,8 @@ const ExpenseController = {
           dateCreate: new Date(),
           startDate: new Date(startDate),
           endDate: new Date(endDate),
-          userId: parsedUserId || null,
-          expenseCategoryId: expenseCategoryId || null,
+          // userId: parsedUserId || null,
+          expenseCategoryId: parsedExpenseCategoryId,
         },
       });
 
@@ -69,10 +81,10 @@ const ExpenseController = {
     try {
       const expenses = await prisma.expense.findMany({
         include: {
-          user: true,
-          category: true,
-          plannings: true,
-          payments: true,
+          user: { select : { username : true}} ,
+          category: { select : { name : true}},
+          // plannings: { select : { name : true}},
+          // payments: { select : { name : true}},
         },
       });
       return res.status(200).json(expenses);
@@ -95,7 +107,12 @@ const ExpenseController = {
 
       const expense = await prisma.expense.findUnique({
         where: { id: parsedId },
+        include: {
+          user: { select: { username: true } },
+          category: { select: { name: true } },
+        },
       });
+
       if (!expense) {
         return res.status(404).json({ message: 'Dépense non trouvée' });
       }
@@ -117,7 +134,7 @@ const ExpenseController = {
         frequency,
         startDate,
         endDate,
-        userId,
+        // userId,
         expenseCategoryId,
       } = req.body;
       const parsedId = parseId(id);
@@ -131,20 +148,19 @@ const ExpenseController = {
       if (!expenseExists) {
         return res.status(404).json({ message: 'Dépense introuvable' });
       }
-      if (userId) {
-        const userExists = await prisma.user.findUnique({
-          where: { id: parseId(userId) },
-        });
-        if (!userExists) {
-          return res
-            .status(400)
-            .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
-        }
-      }
+      let parsedExpenseCategoryId = null;
       if (expenseCategoryId) {
+        parsedExpenseCategoryId = parseId(expenseCategoryId);
+        if (parsedExpenseCategoryId === null) {
+          return res.status(400).json({
+            message: 'L\'ID de la catégorie de dépense est invalide',
+          });
+        }
+
         const categoryExists = await prisma.expenseCategory.findUnique({
-          where: { id: expenseCategoryId },
+          where: { id: parsedExpenseCategoryId },
         });
+
         if (!categoryExists) {
           return res.status(400).json({
             message: 'La catégorie de dépense spécifiée n\'existe pas',
@@ -161,8 +177,8 @@ const ExpenseController = {
           frequency,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
-          userId: parseId(userId) || null,
-          expenseCategoryId: expenseCategoryId || null,
+          // userId: parseId(userId) || null,
+          expenseCategoryId: parsedExpenseCategoryId || expenseExists.expenseCategoryId,
         },
       });
 
@@ -181,27 +197,42 @@ const ExpenseController = {
   async deleteExpense(req, res) {
     try {
       const { id } = req.params;
-      const parsedId = parseId(id);
-
-      if (parsedId === null) {
+      const parsedId = parseInt(id, 10);
+  
+      if (isNaN(parsedId)) {
         return res.status(400).json({ message: 'ID invalide pour la dépense' });
       }
-
+  
+      // Vérifiez si la dépense existe
       const existingExpense = await prisma.expense.findUnique({
         where: { id: parsedId },
       });
-
+  
       if (!existingExpense) {
         return res.status(404).json({ message: 'Dépense non trouvée' });
       }
-
-      const deletedExpense = await prisma.expense.delete({
-        where: { id: parsedId },
-      });
-
-      return res
-        .status(200)
-        .json({ message: 'Dépense supprimée avec succès', deletedExpense });
+  
+      // Essayez de supprimer la dépense
+      try {
+        const deletedExpense = await prisma.expense.delete({
+          where: { id: parsedId },
+        });
+  
+        return res
+          .status(200)
+          .json({ message: 'Dépense supprimée avec succès', deletedExpense });
+      } catch (error) {
+        // Gérer l'erreur de contrainte de clé étrangère
+        if (error.code === 'P2003') {
+          return res.status(409).json({
+            message: 'Impossible de supprimer la dépense car elle est liée à d\'autres enregistrements.',
+            suggestion: 'Veuillez supprimer ou modifier ces enregistrements liés avant de réessayer.',
+          });
+        }
+  
+        // Si c'est une autre erreur, la gérer normalement
+        throw error;
+      }
     } catch (error) {
       console.error('Erreur lors de la suppression de la dépense :', error);
       return res.status(500).json({
@@ -210,6 +241,9 @@ const ExpenseController = {
       });
     }
   },
+  
+
+
 };
 
 export default ExpenseController;

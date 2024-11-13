@@ -13,18 +13,16 @@ const PaymentController = {
         amount,
         paymentDate,
         reference,
-        userId,
+        // userId,
         planningId,
         paymentMethodId,
-        expenseId,
       } = req.body;
-      const parsedUserId = parseId(userId);
+      // const parsedUserId = parseId(userId);
       const parsedPlanningId = parseId(planningId);
       const parsedPaymentMethodId = parseId(paymentMethodId);
-      const parsedExpenseId = parseId(expenseId);
-      const userExists = parsedUserId
-        ? await prisma.user.findUnique({ where: { id: parsedUserId } })
-        : null;
+      // const userExists = parsedUserId
+      //   ? await prisma.user.findUnique({ where: { id: parsedUserId } })
+      //   : null;
       const planningExists = parsedPlanningId
         ? await prisma.planning.findUnique({ where: { id: parsedPlanningId } })
         : null;
@@ -33,14 +31,12 @@ const PaymentController = {
           where: { id: parsedPaymentMethodId },
         })
         : null;
-      const expenseExists = parsedExpenseId
-        ? await prisma.expense.findUnique({ where: { id: parsedExpenseId } })
-        : null;
+     
 
-      if (!userExists)
-        return res
-          .status(400)
-          .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
+      // if (!userExists)
+      //   return res
+      //     .status(400)
+      //     .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
       if (!planningExists)
         return res
           .status(400)
@@ -49,19 +45,15 @@ const PaymentController = {
         return res
           .status(400)
           .json({ message: 'La méthode de paiement spécifiée n\'existe pas' });
-      if (!expenseExists)
-        return res
-          .status(400)
-          .json({ message: 'La dépense spécifiée n\'existe pas' });
+      
       const newPayment = await prisma.payment.create({
         data: {
-          amount,
+          amount:amount,
           paymentDate: new Date(paymentDate),
-          reference,
-          userId: parsedUserId,
+          reference:reference,
+          // userId: parsedUserId,
           planningId: parsedPlanningId,
           paymentMethodId: parsedPaymentMethodId,
-          expenseId: parsedExpenseId,
         },
       });
 
@@ -76,14 +68,13 @@ const PaymentController = {
       });
     }
   },
-  async getAllPayments(req, res) {
+  async getAllPayments(_req, res) {
     try {
       const payments = await prisma.payment.findMany({
         include: {
-          user: true,
-          planning: true,
-          paymentMethod: true,
-          expense: true,
+          user: { select: { username: true } },
+          planning: { select: { name: true } },
+          paymentMethod: { select: { name: true } },
         },
       });
       return res.status(200).json(payments);
@@ -95,6 +86,13 @@ const PaymentController = {
       });
     }
   },
+
+  async getRequirements(_req, res) {
+    const plannings = await prisma.planning.findMany();
+    const paymentMethods = await prisma.paymentMethod.findMany();
+    return res.status(200).json({ plannings, paymentMethods });
+  },
+
   async getPaymentById(req, res) {
     try {
       const { id } = req.params;
@@ -109,10 +107,9 @@ const PaymentController = {
       const payment = await prisma.payment.findUnique({
         where: { id: parsedId },
         include: {
-          user: true,
-          planning: true,
-          paymentMethod: true,
-          expense: true,
+          user: { select: { username: true } },
+          planning: { select: { name: true } },
+          paymentMethod: { select: { name: true } },
         },
       });
 
@@ -137,10 +134,9 @@ const PaymentController = {
         amount,
         paymentDate,
         reference,
-        userId,
+        // userId,
         planningId,
         paymentMethodId,
-        expenseId,
       } = req.body;
       const parsedId = parseId(id);
 
@@ -153,53 +149,61 @@ const PaymentController = {
       const paymentExists = await prisma.payment.findUnique({
         where: { id: parsedId },
       });
-      if (!paymentExists)
+      if (!paymentExists) {
         return res.status(404).json({ message: 'Paiement introuvable' });
+      }
 
-      const userExists = userId
-        ? await prisma.user.findUnique({ where: { id: parseId(userId) } })
-        : null;
-      const planningExists = planningId
-        ? await prisma.planning.findUnique({
-          where: { id: parseId(planningId) },
-        })
-        : null;
-      const paymentMethodExists = paymentMethodId
-        ? await prisma.paymentMethod.findUnique({
-          where: { id: parseId(paymentMethodId) },
-        })
-        : null;
-      const expenseExists = expenseId
-        ? await prisma.expense.findUnique({ where: { id: parseId(expenseId) } })
-        : null;
+      // const userExists = userId
+      //   ? await prisma.user.findUnique({ where: { id: parseId(userId) } })
+      //   : null;
 
-      if (userId && !userExists)
-        return res
-          .status(400)
-          .json({ message: 'L\'utilisateur spécifié n\'existe pas' });
-      if (planningId && !planningExists)
-        return res
-          .status(400)
-          .json({ message: 'La planification spécifiée n\'existe pas' });
-      if (paymentMethodId && !paymentMethodExists)
-        return res
-          .status(400)
-          .json({ message: 'La méthode de paiement spécifiée n\'existe pas' });
-      if (expenseId && !expenseExists)
-        return res
-          .status(400)
-          .json({ message: 'La dépense spécifiée n\'existe pas' });
+      let parsedPlanningId = null;
+      if (planningId) {
+        parsedPlanningId = parseId(planningId);
+        if (parsedPlanningId === null) {
+          return res
+            .status(400)
+            .json({ message: 'ID de planification invalide' });
+        }
+        const planningExists = await prisma.planning.findUnique({
+          where: { id: parsedPlanningId },
+        });
+        if (!planningExists) {
+          return res
+            .status(400)
+            .json({ message: 'La planification spécifiée n\'existe pas' });
+        }
+      }
 
+      let parsedPaymentMethodId = null;
+      if (paymentMethodId) {
+        parsedPaymentMethodId = parseId(paymentMethodId);
+        if (parsedPaymentMethodId === null) {
+          return res
+            .status(400)
+            .json({ message: 'ID de méthode de paiement invalide' });
+        }
+        const paymentMethodExists = await prisma.paymentMethod.findUnique({
+          where: { id: parsedPaymentMethodId },
+        });
+        if (!paymentMethodExists) {
+          return res
+            .status(400)
+            .json({ message: 'La méthode de paiement spécifiée n\'existe pas' });
+        }
+      }
+
+      // Mise à jour du paiement
       const updatedPayment = await prisma.payment.update({
         where: { id: parsedId },
         data: {
           amount,
           paymentDate: new Date(paymentDate),
           reference,
-          userId: parseId(userId) || null,
-          planningId: parseId(planningId) || null,
-          paymentMethodId: parseId(paymentMethodId) || null,
-          expenseId: parseId(expenseId) || null,
+          // userId: parseId(userId) || null,
+          planningId: parsedPlanningId || paymentExists.planningId,
+          paymentMethodId:
+            parsedPaymentMethodId || paymentExists.paymentMethodId,
         },
       });
 
@@ -226,6 +230,7 @@ const PaymentController = {
           .json({ message: 'ID invalide pour le paiement' });
       }
 
+      // Vérifiez si le paiement existe
       const existingPayment = await prisma.payment.findUnique({
         where: { id: parsedId },
       });
@@ -234,13 +239,29 @@ const PaymentController = {
         return res.status(404).json({ message: 'Paiement non trouvé' });
       }
 
-      const deletedPayment = await prisma.payment.delete({
-        where: { id: parsedId },
-      });
+      // Essayez de supprimer le paiement
+      try {
+        const deletedPayment = await prisma.payment.delete({
+          where: { id: parsedId },
+        });
 
-      return res
-        .status(200)
-        .json({ message: 'Paiement supprimé avec succès', deletedPayment });
+        return res
+          .status(200)
+          .json({ message: 'Paiement supprimé avec succès', deletedPayment });
+      } catch (error) {
+        // Gérer l'erreur de contrainte de clé étrangère
+        if (error.code === 'P2003') {
+          return res.status(409).json({
+            message:
+              'Impossible de supprimer le paiement car il est lié à d\'autres enregistrements.',
+            suggestion:
+              'Veuillez supprimer ou modifier ces enregistrements liés avant de réessayer.',
+          });
+        }
+
+        // Si c'est une autre erreur, la gérer normalement
+        throw error;
+      }
     } catch (error) {
       console.error('Erreur lors de la suppression du paiement :', error);
       return res.status(500).json({

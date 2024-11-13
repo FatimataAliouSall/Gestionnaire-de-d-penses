@@ -10,17 +10,35 @@ const PlanningController = {
   async createPlanning(req, res) {
     try {
       const { name, startDate, endDate, amount, expenseId } = req.body;
-      const parsedExpenseId = parseId(expenseId);
-      if (parsedExpenseId) {
-        const expenseExists = await prisma.expense.findUnique({
-          where: { id: parsedExpenseId },
-        });
-        if (!expenseExists) {
-          return res
-            .status(400)
-            .json({ message: 'La dépense spécifiée n\'existe pas' });
-        }
+
+      // Vérifiez que expenseId est fourni
+      if (!expenseId) {
+        return res
+          .status(400)
+          .json({ message: 'L\'ID de la dépense est requis' });
       }
+
+      const parsedExpenseId = parseId(expenseId);
+      
+      // Si expenseId n'est pas un nombre valide
+      if (parsedExpenseId === null) {
+        return res
+          .status(400)
+          .json({ message: 'L\'ID de la dépense est invalide' });
+      }
+
+      // Vérifiez que la dépense existe
+      const expenseExists = await prisma.expense.findUnique({
+        where: { id: parsedExpenseId },
+      });
+
+      if (!expenseExists) {
+        return res
+          .status(400)
+          .json({ message: 'La dépense spécifiée n\'existe pas' });
+      }
+
+      // Création de la nouvelle planification avec expenseId obligatoire
       const newPlanning = await prisma.planning.create({
         data: {
           name,
@@ -43,12 +61,13 @@ const PlanningController = {
     }
   },
 
+
   async getAllPlannings(req, res) {
     try {
       const plannings = await prisma.planning.findMany({
         include: {
-          expense: true,
-          payments: true,
+          expense: { select : { title : true}},
+          // payments: { select : { name : true}},
         },
       });
       return res.status(200).json(plannings);
@@ -77,7 +96,9 @@ const PlanningController = {
 
       const planning = await prisma.planning.findUnique({
         where: { id: parsedId },
-        include: { expense: true, payments: true },
+        include: { expense: { select : { title : true}},
+        //  payments: { select : { name : true}} 
+        },
       });
       if (!planning) {
         return res.status(404).json({ message: 'Planification non trouvée' });
@@ -112,9 +133,16 @@ const PlanningController = {
       if (!planningExists) {
         return res.status(404).json({ message: 'Planification introuvable' });
       }
+      let parsedexpenseId = null;
       if (expenseId) {
+        parsedexpenseId = parseId(expenseId);
+        if (parsedexpenseId === null) {
+          return res.status(400).json({
+            message: 'L\'ID de la dépense est invalide',
+          });
+        }
         const expenseExists = await prisma.expense.findUnique({
-          where: { id: parseId(expenseId) },
+          where: { id: parsedexpenseId },
         });
         if (!expenseExists) {
           return res
@@ -129,7 +157,7 @@ const PlanningController = {
           startDate: new Date(startDate),
           endDate: new Date(endDate),
           amount,
-          expenseId: parseId(expenseId),
+          expenseId: parsedexpenseId || expenseExists.expenseId,
         },
       });
 
@@ -152,9 +180,9 @@ const PlanningController = {
   async deletePlanning(req, res) {
     try {
       const { id } = req.params;
-      const parsedId = parseId(id);
+      const parsedId = parseInt(id, 10);
 
-      if (parsedId === null) {
+      if (isNaN(parsedId)){
         return res
           .status(400)
           .json({ message: 'ID invalide pour la planification' });

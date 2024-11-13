@@ -5,35 +5,37 @@ import {
   updatePlanningValidator,
   deletePlanningValidator,
 } from '../validators/PlanningValidator.js';
-import { authMiddleware } from '../middlewares/auth.js';
+// import { authMiddleware } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.post(
   '/planning',
-  authMiddleware,
+  // authMiddleware,
   createPlanningValidator,
   PlanningController.createPlanning
 );
 
-router.get('/planning', authMiddleware, PlanningController.getAllPlannings);
+router.get('/planning',
+  //  authMiddleware, 
+   PlanningController.getAllPlannings);
 
 router.get(
   '/planning/:id',
-  authMiddleware,
+  // authMiddleware,
   deletePlanningValidator,
   PlanningController.getPlanningById
 );
 
 router.put(
   '/planning/:id',
-  authMiddleware,
+  // authMiddleware,
   updatePlanningValidator,
   PlanningController.updatePlanning
 );
 
 router.delete(
   '/planning/:id',
-  authMiddleware,
+  // authMiddleware,
   deletePlanningValidator,
   PlanningController.deletePlanning
 );

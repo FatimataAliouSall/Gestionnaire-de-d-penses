@@ -56,8 +56,8 @@ const PaymentMethodController = {
     try {
       const paymentMethods = await prisma.paymentMethod.findMany({
         include: {
-          user: true,
-          payments: true,
+          user: { select : { username : true}},
+          // payment: { select : { name : true}},
         },
       });
       return res.status(200).json(paymentMethods);
@@ -77,31 +77,33 @@ const PaymentMethodController = {
     try {
       const { id } = req.params;
       const parsedId = parseUserId(id);
-
+  
       if (parsedId === null) {
-        return res
-          .status(400)
-          .json({ message: 'ID invalide pour le mode de paiement' });
+        return res.status(400).json({ message: 'ID invalide pour le mode de paiement' });
       }
-
+  
       const paymentMethod = await prisma.paymentMethod.findUnique({
         where: { id: parsedId },
+        include: {
+          user: { select: { username: true } },
+          // payment: { select: { name: true } },
+        },
       });
+  
       if (!paymentMethod) {
         return res.status(404).json({ message: 'Mode de paiement non trouvé' });
       }
+  
       return res.status(200).json(paymentMethod);
     } catch (error) {
-      console.error(
-        'Erreur lors de la récupération du mode de paiement :',
-        error
-      );
+      console.error('Erreur lors de la récupération du mode de paiement :', error);
       return res.status(500).json({
         error: 'Erreur lors de la récupération du mode de paiement',
         details: error.message,
       });
     }
   },
+  
 
   async updatePaymentMethod(req, res) {
     try {

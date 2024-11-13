@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import i18next from 'i18next';
 import i18nextMiddleware from 'i18next-http-middleware';
 import Backend from 'i18next-fs-backend';
+import cors from 'cors';
 
 import userRouter from './src/routes/User.js';
 import expenseCategoryRouter from './src/routes/ExpenseCategory.js';
@@ -30,7 +31,12 @@ i18next
     },
   });
 
-app.use(i18nextMiddleware.handle(i18next));
+const corsOptions = {
+  origin: ['http://localhost:5173'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use('/api', userRouter);

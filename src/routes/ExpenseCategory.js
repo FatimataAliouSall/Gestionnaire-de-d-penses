@@ -11,29 +11,29 @@ const router = express.Router();
 
 router.post(
   '/expense-categories',
-  authMiddleware,
+  // authMiddleware,
   createExpenseCategoryValidator,
   ExpenseCategoryController.createExpenseCategory
 );
 router.get(
   '/expense-categories/:id',
-  authMiddleware,
+  // authMiddleware,
   ExpenseCategoryController.getExpenseCategorieById
 );
 router.get(
   '/expense-categories',
-  authMiddleware,
+  // authMiddleware,
   ExpenseCategoryController.getAllExpenseCategories
 );
 router.put(
   '/expense-categories/:id',
-  authMiddleware,
+  // authMiddleware,
   updateExpenseCategoryValidator,
   ExpenseCategoryController.updateExpenseCategory
 );
 router.delete(
   '/expense-categories/:id',
-  authMiddleware,
+  // authMiddleware,
   deleteExpenseCategoryValidator,
   ExpenseCategoryController.deleteExpenseCategory
 );

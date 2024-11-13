@@ -29,21 +29,21 @@ const createPaymentValidator = [
     .bail()
     .isISO8601()
     .withMessage('La date de paiement doit être une date valide (format ISO).'),
-  check('userId')
-    .notEmpty()
-    .withMessage('L\'ID de l\'utilisateur est obligatoire.')
-    .bail()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({
-        where: { id: parseInt(userId, 10) },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
+  // check('userId')
+  //   .notEmpty()
+  //   .withMessage('L\'ID de l\'utilisateur est obligatoire.')
+  //   .bail()
+  //   .isInt()
+  //   .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
+  //   .bail()
+  //   .custom(async (userId) => {
+  //     const userExists = await prisma.user.findUnique({
+  //       where: { id: parseInt(userId, 10) },
+  //     });
+  //     if (!userExists) {
+  //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
+  //     }
+  //   }),
   check('paymentMethodId')
     .optional()
     .isInt()
@@ -85,19 +85,19 @@ const updatePaymentValidator = [
     .optional()
     .isISO8601()
     .withMessage('La date de paiement doit être une date valide (format ISO).'),
-  check('userId')
-    .optional()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const userExists = await prisma.user.findUnique({
-        where: { id: parseInt(userId, 10) },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
+  // check('userId')
+  //   .optional()
+  //   .isInt()
+  //   .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
+  //   .bail()
+  //   .custom(async (userId) => {
+  //     const userExists = await prisma.user.findUnique({
+  //       where: { id: parseInt(userId, 10) },
+  //     });
+  //     if (!userExists) {
+  //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
+  //     }
+  //   }),
   check('paymentMethodId')
     .optional()
     .isInt()

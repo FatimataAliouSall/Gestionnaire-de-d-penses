@@ -7,11 +7,16 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum Role {
+    Admin
+    Menager
+}
 model User {
     id         Int               @id @default(autoincrement())
-    username   String            @unique
+    username   String            
     email      String            @unique @db.VarChar(100)
     password   String  
+    role       Role              @default(Menager)
     status     Boolean
     expenses   Expense[]
     categories ExpenseCategory[]
@@ -48,10 +53,10 @@ model Expense {
     endDate           DateTime
     user              User?            @relation(fields: [userId], references: [id])
     userId            Int?
-    category          ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id])
-    expenseCategoryId Int?
+    category          ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
+    expenseCategoryId Int
     plannings         Planning[]
-    payments          Payment[]
+    
 }
 
 model Planning {
@@ -76,6 +81,5 @@ model Payment {
     planningId      Int
     paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
     paymentMethodId Int
-    expense         Expense       @relation(fields: [expenseId], references: [id])
-    expenseId       Int
+    
 }

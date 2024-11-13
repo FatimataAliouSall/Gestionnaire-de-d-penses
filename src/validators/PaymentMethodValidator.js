@@ -35,23 +35,23 @@ const createPaymentMethodValidator = [
     .optional()
     .isIn(['true', 'false'])
     .withMessage('Le statut doit être "true" ou "false".'),
-  check('userId')
-    .notEmpty()
-    .withMessage('L\'ID de l\'utilisateur est obligatoire.')
-    .bail()
-    .isInt()
-    .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
-    .bail()
-    .custom(async (userId) => {
-      const parsedUserId = parseInt(userId, 10);
-      const userExists = await prisma.user.findUnique({
-        where: { id: parsedUserId },
-      });
-      if (!userExists) {
-        throw new Error('L\'utilisateur spécifié n\'existe pas.');
-      }
-    }),
-  handleValidationErrors,
+  // check('userId')
+  //   .notEmpty()
+  //   .withMessage('L\'ID de l\'utilisateur est obligatoire.')
+  //   .bail()
+  //   .isInt()
+  //   .withMessage('L\'ID de l\'utilisateur doit être un nombre entier.')
+  //   .bail()
+  //   .custom(async (userId) => {
+  //     const parsedUserId = parseInt(userId, 10);
+  //     const userExists = await prisma.user.findUnique({
+  //       where: { id: parsedUserId },
+  //     });
+  //     if (!userExists) {
+  //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
+  //     }
+  //   }),
+  // handleValidationErrors,
 ];
 const updatePaymentMethodValidator = [
   param('id')
