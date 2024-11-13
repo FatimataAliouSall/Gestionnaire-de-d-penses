@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "ee7dd25b-d6ce-41ba-b59a-c94d6569de83",
+		"name": "payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38098585"
+	},
+	"item": [
+		{
+			"name": "/payments",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 150.00,\r\n  \"paymentDate\": \"2024-10-25T12:00:00Z\",\r\n  \"reference\": \"REF12345\",\r\n  \"userId\": 1,\r\n  \"planningId\": 1,\r\n  \"paymentMethodId\": 1,\r\n  \"expenseId\": 2\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/payments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/payments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/payments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/payments :id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/payments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"amount\": 200.00,\r\n  \"paymentDate\": \"2024-11-01T12:00:00Z\",\r\n  \"reference\": \"NEWREF123\",\r\n  \"userId\": 1,\r\n  \"planningId\": 1,\r\n  \"paymentMethodId\": 1,\r\n  \"expenseId\": 3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/payments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"payments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

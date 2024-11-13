@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "08f7bbb2-6582-4452-9cfa-fe6f3b12f6c3",
+		"name": "planning",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38098585"
+	},
+	"item": [
+		{
+			"name": "/planning",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"planification\",\r\n  \"startDate\": \"2024-10-25T00:00:00.000Z\",\r\n  \"endDate\": \"2024-10-30T00:00:00.000Z\",\r\n  \"amount\": 500.00,\r\n  \"expenseId\": 5\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/planning",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"planning"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/planning",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "/planning :id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/planning/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"planning",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/planning :id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Nom mjour\",\r\n  \"startDate\": \"2024-10-26T00:00:00.000Z\",\r\n  \"endDate\": \"2024-11-01T00:00:00.000Z\",\r\n  \"amount\": 600.0,\r\n  \"expenseId\": 2\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/planning/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"planning",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/planning :id",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
