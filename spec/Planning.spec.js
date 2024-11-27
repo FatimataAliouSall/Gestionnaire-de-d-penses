@@ -12,6 +12,7 @@ describe('Planning Model Tests', () => {
         name: data.data.name,
         startDate: data.data.startDate,
         endDate: data.data.endDate,
+        dueDate: data.data.endDate,
         amount: data.data.amount,
         expenseId: data.data.expenseId,
       };
@@ -32,6 +33,7 @@ describe('Planning Model Tests', () => {
           name: 'Monthly Budget',
           startDate: new Date(),
           endDate: new Date(),
+          dueDate: new Date(),
           amount: 500.0,
           expenseId: 1,
         },
@@ -56,6 +58,7 @@ describe('Planning Model Tests', () => {
       name: 'Monthly Budget',
       startDate: new Date(),
       endDate: new Date(),
+      dueDate: new Date(),
       amount: 500.0,
       expenseId: 1,
     };
