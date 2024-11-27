@@ -7,12 +7,14 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
-  const { username, email, password } = req.body;
+  // const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await prisma.user.findFirst({
       where: {
-        OR: [{ username }, { email }],
+        // OR: [{ username }, { email }],
+        email ,
       },
     });
 
@@ -25,11 +27,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid password.' });
     }
     const token = jwt.sign(
-      { userId: user.id, username: user.username },
+      { userId: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    res.json({ token, userId: user.id, username: user.username });
+    res.json({ token, userId: user.id, username: user.username, role:user.role });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred during login.' });
