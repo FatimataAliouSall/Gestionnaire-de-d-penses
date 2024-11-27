@@ -5,30 +5,40 @@ import {
   updateExpenseValidator,
   deleteExpenseValidator,
 } from '../validators/ExpenseValidator.js';
-// import { authMiddleware } from '../middlewares/auth.js';
+import { authMiddleware } from '../middlewares/auth.js';
+// import { authRoleAdmin } from '../middlewares/authRoleAdmin.js';
 
 const router = express.Router();
 router.post(
   '/expenses',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   createExpenseValidator,
   ExpenseController.createExpense
 );
-router.get('/expenses',
-  //  authMiddleware,
-  ExpenseController.getAllExpenses);
-router.get('/expenses/:id',
-  //  authMiddleware,
-  ExpenseController.getExpenseById);
+router.get(
+  '/expenses',
+  authMiddleware,
+  //  authRoleAdmin,
+  ExpenseController.getAllExpenses
+);
+router.get(
+  '/expenses/:id',
+  authMiddleware,
+  // authRoleAdmin,
+  ExpenseController.getExpenseById
+);
 router.put(
   '/expenses/:id',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   updateExpenseValidator,
   ExpenseController.updateExpense
 );
 router.delete(
   '/expenses/:id',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   deleteExpenseValidator,
   ExpenseController.deleteExpense
 );
