@@ -23,6 +23,10 @@ const createPaymentValidator = [
     .withMessage(
       'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
     ),
+  check('unit')
+    .notEmpty()
+    .withMessage('L\'unité est obligatoire.')
+    .bail(),
   check('paymentDate')
     .notEmpty()
     .withMessage('La date de paiement est obligatoire.')
@@ -81,6 +85,10 @@ const updatePaymentValidator = [
     .withMessage(
       'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
     ),
+  check('unit')
+    .notEmpty()
+    .withMessage('L\'unité est obligatoire.')
+    .bail(),  
   check('paymentDate')
     .optional()
     .isISO8601()
