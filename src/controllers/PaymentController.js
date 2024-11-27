@@ -11,12 +11,18 @@ const PaymentController = {
     try {
       const {
         amount,
+        unit,
         paymentDate,
         reference,
         // userId,
         planningId,
         paymentMethodId,
       } = req.body;
+      if (!unit || typeof unit !== 'string') {
+        return res
+          .status(400)
+          .json({ message: 'Le champ \'unit\' est obligatoire et doit être une chaîne de caractères' });
+      }
       // const parsedUserId = parseId(userId);
       const parsedPlanningId = parseId(planningId);
       const parsedPaymentMethodId = parseId(paymentMethodId);
@@ -49,6 +55,7 @@ const PaymentController = {
       const newPayment = await prisma.payment.create({
         data: {
           amount:amount,
+          unit: unit.trim(),
           paymentDate: new Date(paymentDate),
           reference:reference,
           // userId: parsedUserId,
@@ -132,6 +139,7 @@ const PaymentController = {
       const { id } = req.params;
       const {
         amount,
+        unit,
         paymentDate,
         reference,
         // userId,
@@ -198,6 +206,7 @@ const PaymentController = {
         where: { id: parsedId },
         data: {
           amount,
+          unit,
           paymentDate: new Date(paymentDate),
           reference,
           // userId: parseId(userId) || null,
