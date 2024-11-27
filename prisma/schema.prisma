@@ -46,11 +46,7 @@ model PaymentMethod {
 model Expense {
     id                Int             @id @default(autoincrement())
     title             String          @db.VarChar(50)
-    amount            Decimal         @db.Decimal(15, 2)
-    frequency         String          @db.VarChar(50)
     dateCreate        DateTime
-    startDate         DateTime
-    endDate           DateTime
     user              User?            @relation(fields: [userId], references: [id])
     userId            Int?
     category          ExpenseCategory @relation(fields: [expenseCategoryId], references: [id])
@@ -64,7 +60,9 @@ model Planning {
     name      String    @db.VarChar(50)
     startDate DateTime
     endDate   DateTime
+    dueDate   DateTime
     amount    Decimal   @db.Decimal(15, 2)
+    unit      String    @db.VarChar(50)
     expense   Expense   @relation(fields: [expenseId], references: [id])
     expenseId Int
     payments  Payment[]
@@ -73,6 +71,7 @@ model Planning {
 model Payment {
     id              Int           @id @default(autoincrement())
     amount          Decimal       @db.Decimal(15, 2)
+    unit            String        @db.VarChar(50)
     paymentDate     DateTime
     reference       String        @db.VarChar(50)
     user            User?          @relation(fields: [userId], references: [id])
