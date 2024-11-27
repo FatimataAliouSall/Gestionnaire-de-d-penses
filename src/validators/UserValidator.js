@@ -21,7 +21,10 @@ const createUserValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage(
       'Le nom d\'utilisateur doit comporter entre 3 et 50 caractères.'
-    ),
+    )
+    .bail()
+    .matches(/^[a-zA-Z-_]+$/)
+    .withMessage('Le nom d\'utilisateur ne doit pas contenir de chiffres.'),
   check('email')
     .isEmail()
     .withMessage('Veuillez fournir une adresse email valide.')
@@ -68,6 +71,9 @@ const updateUserValidator = [
     .withMessage(
       'Le nom d\'utilisateur doit comporter entre 3 et 50 caractères.'
     ),
+  // .bail()
+  // .matches(/^[a-zA-Z-_]+$/)
+  // .withMessage('Le nom d\'utilisateur ne doit pas contenir de chiffres.'),
   check('email')
     .optional()
     .isEmail()
@@ -80,6 +86,10 @@ const updateUserValidator = [
     .optional()
     .isIn(['true', 'false'])
     .withMessage('Le statut doit être soit "true" soit "false".'),
+  check('role')
+    .optional()
+    .isIn(['Admin', 'Menager'])
+    .withMessage('Le role doit être soit "Admin" soit "Menager".'),
   handleValidationErrors,
 ];
 
