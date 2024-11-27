@@ -19,6 +19,7 @@ const createPlanningValidator = [
     .bail()
     .isLength({ min: 3, max: 50 })
     .withMessage('Le nom doit comporter entre 3 et 50 caractères.'),
+    
   check('startDate')
     .notEmpty()
     .withMessage('La date de début est obligatoire.')
@@ -34,6 +35,14 @@ const createPlanningValidator = [
     .isISO8601()
     .withMessage(
       'La date de fin doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
+    ),
+  check('dueDate')
+    .notEmpty()
+    .withMessage('La date d\'échéance est obligatoire.')
+    .bail()
+    .isISO8601()
+    .withMessage(
+      'La date d\'échéance doit être au format ISO8601 (ex. : \'YYYY-MM-DD)'
     )
     .bail()
     .custom((endDate, { req }) => {
@@ -53,6 +62,10 @@ const createPlanningValidator = [
     .withMessage(
       'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
     ),
+  check('unit')
+    .notEmpty()
+    .withMessage('L\'unité est obligatoire.')
+    .bail(),
   check('expenseId')
     .optional()
     .isInt()
@@ -117,6 +130,10 @@ const updatePlanningValidator = [
     .withMessage(
       'Le montant doit être un nombre positif avec deux chiffres après la virgule maximum.'
     ),
+  check('unit')
+    .notEmpty()
+    .withMessage('L\'unité est obligatoire.')
+    .bail(),
   check('expenseId')
     .optional()
     .isInt()
