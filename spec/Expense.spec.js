@@ -10,11 +10,7 @@ describe('Expense Model Tests', () => {
       return {
         id: 1,
         title: data.data.title,
-        amount: data.data.amount,
-        frequency: data.data.frequency,
         dateCreate: data.data.dateCreate,
-        startDate: data.data.startDate,
-        endDate: data.data.endDate,
         userId: data.data.userId,
         expenseCategoryId: data.data.expenseCategoryId,
       };
@@ -33,8 +29,6 @@ describe('Expense Model Tests', () => {
         {
           id: 1,
           title: 'Rent',
-          amount: 1000.0,
-          frequency: 'Monthly',
           userId: 1,
         },
       ];
@@ -56,11 +50,7 @@ describe('Expense Model Tests', () => {
   it('can be created', async () => {
     const expense = {
       title: 'Rent',
-      amount: 1000.0,
-      frequency: 'Monthly',
       dateCreate: new Date(),
-      startDate: new Date(),
-      endDate: new Date(),
       userId: 1,
       expenseCategoryId: 1,
     };
@@ -74,8 +64,6 @@ describe('Expense Model Tests', () => {
   it('can be updated', async () => {
     const updatedExpense = {
       title: 'Electricity',
-      amount: 150.0,
-      frequency: 'Monthly',
     };
     const result = await prisma.expense.update({
       where: { id: expenseId },
@@ -89,8 +77,6 @@ describe('Expense Model Tests', () => {
   it('fails to update an expense that does not exist', async () => {
     const updatedExpense = {
       title: 'Non-existent',
-      amount: 200.0,
-      frequency: 'Yearly',
     };
 
     await expectAsync(
