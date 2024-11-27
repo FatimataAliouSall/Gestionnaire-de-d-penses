@@ -21,6 +21,9 @@ const createPaymentMethodValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
+    .matches(/^(?!^\d+$).*$/)
+    .withMessage('Le nom ne peut pas être composé uniquement de chiffres.')
+
     .custom(async (name, { req }) => {
       const { userId } = req.body;
       const parsedUserId = parseInt(userId, 10);
@@ -51,7 +54,7 @@ const createPaymentMethodValidator = [
   //       throw new Error('L\'utilisateur spécifié n\'existe pas.');
   //     }
   //   }),
-  // handleValidationErrors,
+  handleValidationErrors,
 ];
 const updatePaymentMethodValidator = [
   param('id')
@@ -74,7 +77,10 @@ const updatePaymentMethodValidator = [
     .optional()
     .isLength({ min: 3, max: 50 })
     .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
-    .bail()
+    // .bail()
+    // .matches(/^(?!^\d+$).*$/)
+    // .withMessage('Le nom ne peut pas être composé uniquement de chiffres.')
+
     .custom(async (name, { req }) => {
       const { id, userId } = req.params;
       const parsedUserId = parseInt(userId, 10);
