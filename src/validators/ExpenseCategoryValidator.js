@@ -20,6 +20,9 @@ const createExpenseCategoryValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
+    .matches(/^(?!^\d+$).*$/)
+    .withMessage('Le nom ne peut pas être composé uniquement de chiffres.')
+
     .custom(async (name, { req }) => {
       const existingCategory = await prisma.expenseCategory.findFirst({
         where: { name, userId: parseInt(req.body.userId, 10) },
@@ -56,6 +59,8 @@ const updateExpenseCategoryValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage('Le nom doit comporter entre 3 et 50 caractères.')
     .bail()
+    .matches(/^(?!^\d+$).*$/)
+    .withMessage('Le nom ne peut pas être composé uniquement de chiffres.')
     .custom(async (name, { req }) => {
       const { id, userId } = req.params;
       const existingCategory = await prisma.expenseCategory.findFirst({
