@@ -127,30 +127,49 @@ const ExpenseCategoryController = {
     try {
       const { id } = req.params;
       const parsedId = parseUserId(id);
-
-      if (parsedId === null){
+  
+      if (parsedId === null) {
         return res.status(400).json({ message: 'ID invalide pour la catégorie' });
       }
+  
       const existingCategory = await prisma.expenseCategory.findUnique({
         where: { id: parsedId },
       });
-
+  
       if (!existingCategory) {
-        return res.status(404).json({ message:  'Catégorie non trouvée' });
+        return res.status(404).json({ message: 'Catégorie non trouvée' });
       }
-
+  
+      // Vérifiez si des dépenses sont liées à cette catégorie
+      const relatedExpenses = await prisma.expense.findMany({
+        where: { expenseCategoryId: parsedId },
+      });
+  
+      if (relatedExpenses.length > 0) {
+        return res.status(400).json({
+          message: `Impossible de supprimer la catégorie. Elle est associée à ${relatedExpenses.length} dépense(s).`,
+        });
+      }
       const deletedCategory = await prisma.expenseCategory.delete({
         where: { id: parsedId },
       });
-
+  
       return res
         .status(200)
         .json({ message: 'Catégorie supprimée avec succès', deletedCategory });
     } catch (error) {
       console.error('Erreur lors de la suppression de la catégorie :', error);
-      return res
-        .status(500)
-        .json({ error: 'Erreur lors de la suppression de catégorie', details: error.message });
+  
+      if (error.code === 'P2003') {
+        return res.status(400).json({
+          message: 'Impossible de supprimer la catégorie en raison de dépendances liées.',
+        });
+      }
+  
+      return res.status(500).json({
+        error: 'Erreur lors de la suppression de catégorie',
+        details: error.message,
+      });
     }
   },
 };
