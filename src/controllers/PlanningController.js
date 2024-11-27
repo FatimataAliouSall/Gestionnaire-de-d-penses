@@ -9,49 +9,49 @@ function parseId(id) {
 const PlanningController = {
   async createPlanning(req, res) {
     try {
-      const { name, startDate, endDate, amount, expenseId } = req.body;
-
+      const { name, startDate, endDate, dueDate, amount, unit, expenseId } = req.body;
+  
+     
+      // if (!name || !startDate || !endDate || !dueDate || !amount || !unit) {
+      //   return res.status(400).json({ 
+      //     message: 'Tous les champs obligatoires doivent être fournis : name, startDate, endDate, dueDate, amount, unit' 
+      //   });
+      // }
+  
       // Vérifiez que expenseId est fourni
       if (!expenseId) {
-        return res
-          .status(400)
-          .json({ message: 'L\'ID de la dépense est requis' });
+        return res.status(400).json({ message: 'L\'ID de la dépense est requis' });
       }
-
+  
       const parsedExpenseId = parseId(expenseId);
-      
-      // Si expenseId n'est pas un nombre valide
       if (parsedExpenseId === null) {
-        return res
-          .status(400)
-          .json({ message: 'L\'ID de la dépense est invalide' });
+        return res.status(400).json({ message: 'L\'ID de la dépense est invalide'});
       }
-
-      // Vérifiez que la dépense existe
+  
       const expenseExists = await prisma.expense.findUnique({
         where: { id: parsedExpenseId },
       });
-
+  
       if (!expenseExists) {
-        return res
-          .status(400)
-          .json({ message: 'La dépense spécifiée n\'existe pas' });
+        return res.status(400).json({ message: 'L\a dépense spécifiée n\'existe pas'});
       }
-
-      // Création de la nouvelle planification avec expenseId obligatoire
+  
       const newPlanning = await prisma.planning.create({
         data: {
           name,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
+          dueDate: new Date(dueDate),
           amount,
+          unit,
           expenseId: parsedExpenseId,
         },
       });
-
-      return res
-        .status(201)
-        .json({ message: 'Planification créée avec succès', newPlanning });
+  
+      return res.status(201).json({ 
+        message: 'Planification créée avec succès', 
+        newPlanning 
+      });
     } catch (error) {
       console.error('Erreur lors de la création de la planification :', error);
       return res.status(500).json({
@@ -119,7 +119,7 @@ const PlanningController = {
   async updatePlanning(req, res) {
     try {
       const { id } = req.params;
-      const { name, startDate, endDate, amount, expenseId } = req.body;
+      const { name, startDate, endDate, dueDate, amount,unit , expenseId } = req.body;
       const parsedId = parseId(id);
 
       if (parsedId === null) {
@@ -156,7 +156,9 @@ const PlanningController = {
           name,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
+          dueDate: new Date(dueDate),
           amount,
+          unit,
           expenseId: parsedexpenseId || expenseExists.expenseId,
         },
       });
