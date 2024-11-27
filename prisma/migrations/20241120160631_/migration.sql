@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Planning" ALTER COLUMN "unit" SET DATA TYPE TEXT;
