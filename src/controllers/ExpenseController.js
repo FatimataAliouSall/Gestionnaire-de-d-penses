@@ -11,10 +11,6 @@ const ExpenseController = {
     try {
       const {
         title,
-        amount,
-        frequency,
-        startDate,
-        endDate,
         // userId,
         expenseCategoryId,
       } = req.body;
@@ -56,11 +52,7 @@ const ExpenseController = {
       const newExpense = await prisma.expense.create({
         data: {
           title,
-          amount,
-          frequency,
           dateCreate: new Date(),
-          startDate: new Date(startDate),
-          endDate: new Date(endDate),
           // userId: parsedUserId || null,
           expenseCategoryId: parsedExpenseCategoryId,
         },
@@ -130,10 +122,6 @@ const ExpenseController = {
       const { id } = req.params;
       const {
         title,
-        amount,
-        frequency,
-        startDate,
-        endDate,
         // userId,
         expenseCategoryId,
       } = req.body;
@@ -173,10 +161,6 @@ const ExpenseController = {
         where: { id: parsedId },
         data: {
           title,
-          amount,
-          frequency,
-          startDate: new Date(startDate),
-          endDate: new Date(endDate),
           // userId: parseId(userId) || null,
           expenseCategoryId: parsedExpenseCategoryId || expenseExists.expenseCategoryId,
         },
