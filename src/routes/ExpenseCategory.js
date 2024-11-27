@@ -6,34 +6,40 @@ import {
   deleteExpenseCategoryValidator,
 } from '../validators/ExpenseCategoryValidator.js';
 import { authMiddleware } from '../middlewares/auth.js';
+// import { authRoleAdmin } from '../middlewares/authRoleAdmin.js';
 
 const router = express.Router();
 
 router.post(
   '/expense-categories',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   createExpenseCategoryValidator,
   ExpenseCategoryController.createExpenseCategory
 );
 router.get(
   '/expense-categories/:id',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   ExpenseCategoryController.getExpenseCategorieById
 );
 router.get(
   '/expense-categories',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   ExpenseCategoryController.getAllExpenseCategories
 );
 router.put(
   '/expense-categories/:id',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   updateExpenseCategoryValidator,
   ExpenseCategoryController.updateExpenseCategory
 );
 router.delete(
   '/expense-categories/:id',
-  // authMiddleware,
+  authMiddleware,
+  // authRoleAdmin,
   deleteExpenseCategoryValidator,
   ExpenseCategoryController.deleteExpenseCategory
 );
